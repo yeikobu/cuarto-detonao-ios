@@ -15,6 +15,7 @@ struct ReservesView: View {
             if fetchingData {
                 VStack {
                     Text("Obteniendo datos")
+                    
                     ProgressView()
                         .scaleEffect(1.4)
                 }
@@ -61,16 +62,17 @@ struct ReservesView: View {
                 }
                 .refreshable {
                     Task {
-                        fetchingData = true
                         await viewModel.fetchReserves()
-                        fetchingData = false
                     }
                 }
+                .listStyle(.insetGrouped)
             }
         }
-        .navigationTitle("Reservas")
+        .navigationTitle("\(viewModel.reserves.count) Reservas")
         .task {
+            fetchingData = true
             await viewModel.fetchReserves()
+            fetchingData = false
         }
     }
 }
