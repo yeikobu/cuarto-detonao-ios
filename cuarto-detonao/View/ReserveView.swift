@@ -12,8 +12,12 @@ struct ReserveView: View {
     var reserveModel: ReserveModel
     
     @State private var reserveViewModel = ReserveViewModel()
+    @State private var reservesViewModel = ReservesViewModel()
     @State private var date = ""
-    @State private var showMenuOption = false
+    
+    @State private var showDeleteWarning = false
+    @State private var deletingData = false
+    @State private var isReserveDeleted = false
     
     var body: some View {
         NavigationStack {
@@ -174,7 +178,7 @@ struct ReserveView: View {
                         Divider()
                         
                         Button(role: .destructive) {
-                            //
+                            showDeleteWarning.toggle()
                         } label: {
                             Label("Eliminar", systemImage: "trash")
                         }
@@ -183,8 +187,36 @@ struct ReserveView: View {
                     }
                 }
             }
+            .alert(isPresented: $showDeleteWarning) {
+                Alert(title: Text("¿Quieres eliminar la reserva de \(reserveModel.remitenteNombre)?"), primaryButton: .destructive(Text("Eliminar")) {
+                    Task {
+                        deletingData = true
+                        isReserveDeleted = await reservesViewModel.deleteReserveByID(id: reserveModel.id)
+                        deletingData = false
+                    }
+                }, secondaryButton: .cancel())
+            }
+            .alert("Reserva eliminada exitosamente", isPresented: $isReserveDeleted) {
+                Button("Aceptar") {}
+            }
             .task {
                 date = reserveViewModel.transformDate(isoDate: reserveModel.createdAt)
+            }
+        }
+        .overlay {
+            if deletingData {
+                VStack {
+                    Text("Eliminando reserva..")
+                        .font(.title2)
+                    
+                    ProgressView()
+                        .scaleEffect(1.4)
+                }
+                .padding(8)
+                .background(
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(.ultraThinMaterial)
+                )
             }
         }
     }
