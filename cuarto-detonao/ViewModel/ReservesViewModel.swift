@@ -22,4 +22,16 @@ class ReservesViewModel {
             errorMessage = "Error al obtener los datos de la API"
         }
     }
+    
+    @MainActor
+    func deleteReserveByID(id: Int) async -> Bool {
+        do {
+            let message = try await reserveService.deleteReserveByID(id: id)
+            print(message)
+            return true
+        } catch {
+            print(error)
+            return false
+        }
+    }
 }
