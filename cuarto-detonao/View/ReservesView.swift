@@ -21,42 +21,44 @@ struct ReservesView: View {
                 }
             } else {
                 List(viewModel.reserves, id: \.id) { reserve in
-                    NavigationLink(destination: ReserveView(reserveModel: reserve)) {
-                        HStack(spacing: 30) {
-                            Text(String(reserve.id))
+                    LazyVStack {
+                        NavigationLink(destination: ReserveView(reserveModel: reserve)) {
+                            HStack(spacing: 30) {
+                                Text(String(reserve.id))
+                                
+                                Text("\(reserve.remitenteNombre) \(reserve.remitenteApellido)")
+                                
+                                Spacer()
+                                
+                                Text("$\(reserve.totalAPagar)")
+                            }
+                        }
+                        .contextMenu {
+                            Button {
+                                //
+                            } label: {
+                                Label("Pagar", systemImage: "creditcard")
+                            }
                             
-                            Text("\(reserve.remitenteNombre) \(reserve.remitenteApellido)")
+                            Button {
+                                //
+                            } label: {
+                                Label("Ver detalles", systemImage: "info.circle")
+                            }
                             
-                            Spacer()
+                            Button {
+                                //
+                            } label: {
+                                Label("Editar", systemImage: "pencil.and.list.clipboard")
+                            }
                             
-                            Text("$\(reserve.totalAPagar)")
-                        }
-                    }
-                    .contextMenu {
-                        Button {
-                            //
-                        } label: {
-                            Label("Pagar", systemImage: "creditcard")
-                        }
-                        
-                        Button {
-                            //
-                        } label: {
-                            Label("Ver detalles", systemImage: "info.circle")
-                        }
-                        
-                        Button {
-                            //
-                        } label: {
-                            Label("Editar", systemImage: "pencil.and.list.clipboard")
-                        }
-                        
-                        Divider()
-                        
-                        Button(role: .destructive) {
-                            //
-                        } label: {
-                            Label("Eliminar", systemImage: "trash")
+                            Divider()
+                            
+                            Button(role: .destructive) {
+                                //
+                            } label: {
+                                Label("Eliminar", systemImage: "trash")
+                            }
                         }
                     }
                 }
