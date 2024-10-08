@@ -10,6 +10,16 @@ import SwiftUI
 struct ReservesView: View {
     @State private var viewModel = ReservesViewModel()
     @State private var fetchingData = false
+    @State private var searchedText = ""
+    
+    var searchResults: [ReserveModel] {
+        if searchedText.isEmpty {
+            return viewModel.reserves
+        } else {
+            return viewModel.reserves.filter { $0.remitenteNombre.contains(searchedText) || $0.remitenteApellido.contains(searchedText) || $0.id == Int(searchedText)}
+        }
+    }
+    
     var body: some View {
         NavigationStack {
             if fetchingData {
@@ -20,7 +30,7 @@ struct ReservesView: View {
                         .scaleEffect(1.4)
                 }
             } else {
-                List(viewModel.reserves, id: \.id) { reserve in
+                List(searchResults, id: \.id) { reserve in
                     LazyVStack {
                         NavigationLink(destination: ReserveView(reserveModel: reserve)) {
                             HStack(spacing: 30) {
@@ -67,7 +77,9 @@ struct ReservesView: View {
                         await viewModel.fetchReserves()
                     }
                 }
-                .listStyle(.insetGrouped)
+                .searchable(text: $searchedText, prompt: "Busca por nombre o id") {
+                    
+                }
             }
         }
         .navigationTitle("\(viewModel.reserves.count) Reservas")
