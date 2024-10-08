@@ -17,7 +17,7 @@ struct ContentView: View {
                     Label("Ver reservas", systemImage: "list.clipboard")
                 }
                 
-                NavigationLink(destination: ReservesView()) {
+                NavigationLink(destination: EmptyView()) {
                     Label("Ver reservas pagadas", systemImage: "checkmark.rectangle.stack")
                 }
             }

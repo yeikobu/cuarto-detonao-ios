@@ -12,7 +12,8 @@ struct ReserveView: View {
     var reserveModel: ReserveModel
     
     @State private var reserveViewModel = ReserveViewModel()
-    @State var date = ""
+    @State private var date = ""
+    @State private var showMenuOption = false
     
     var body: some View {
         NavigationStack {
@@ -119,6 +120,8 @@ struct ReserveView: View {
                         Text("\(date)")
                             .font(.footnote)
                             .fontWeight(.bold)
+                            .frame(maxWidth: 170, alignment: .trailing)
+                            .multilineTextAlignment(.trailing)
                     }
                     
                     if let foto = reserveModel.fotoURL {
@@ -153,6 +156,33 @@ struct ReserveView: View {
                 }
             }
             .navigationTitle("Reserva de \(reserveModel.remitenteNombre)")
+            .toolbar {
+                ToolbarItem(placement: .primaryAction) {
+                    Menu {
+                        Button {
+                            //
+                        } label: {
+                            Label("Pagar", systemImage: "creditcard")
+                        }
+                        
+                        Button {
+                            //
+                        } label: {
+                            Label("Editar", systemImage: "pencil.and.list.clipboard")
+                        }
+                        
+                        Divider()
+                        
+                        Button(role: .destructive) {
+                            //
+                        } label: {
+                            Label("Eliminar", systemImage: "trash")
+                        }
+                    } label: {
+                        Text("Opciones")
+                    }
+                }
+            }
             .task {
                 date = reserveViewModel.transformDate(isoDate: reserveModel.createdAt)
             }
