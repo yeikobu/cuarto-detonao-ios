@@ -77,9 +77,7 @@ struct ReservesView: View {
                         await viewModel.fetchReserves()
                     }
                 }
-                .searchable(text: $searchedText, prompt: "Busca por nombre o id") {
-                    
-                }
+                .searchable(text: $searchedText, prompt: "Busca por id, nombre o apellido") {}
             }
         }
         .navigationTitle("\(viewModel.reserves.count) Reservas")
