@@ -20,6 +20,8 @@ struct ReservesView: View {
     // Estado de la búsqueda de una reserva
     @State private var searchedText = ""
     
+    @State private var newReserve = false
+    
     var searchResults: [ReserveModel] {
         get {
             if searchedText.isEmpty {
@@ -104,7 +106,7 @@ struct ReservesView: View {
                 .toolbar {
                     ToolbarItem {
                         Button("Nueva reserva") {
-                            // Acción para nueva reserva
+                            newReserve.toggle()
                         }
                     }
                 }
@@ -133,6 +135,11 @@ struct ReservesView: View {
             }
         }
         .navigationTitle("\(viewModel.reserves.count) Reservas")
+        .sheet(isPresented: $newReserve) {
+            NavigationStack {
+                NewReserveView()
+            }
+        }
         .alert("Reserva eliminada exitosamente", isPresented: $isReserveDeleted) {
             Button("Aceptar") {}
         }
