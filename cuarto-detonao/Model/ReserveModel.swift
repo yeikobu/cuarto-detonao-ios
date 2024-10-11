@@ -47,8 +47,3 @@ struct Detalle: Codable, Hashable {
         case cantidad
     }
 }
-
-//MARK: - DeleteReserveResponseModel
-struct DeleteReserveResponseModel: Codable {
-    let message: String
-}

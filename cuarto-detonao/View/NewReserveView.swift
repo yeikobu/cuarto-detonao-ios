@@ -9,6 +9,8 @@ import SwiftUI
 import PhotosUI
 
 struct NewReserveView: View {
+    @State private var newReserveViewModel = NewReserveViewModel()
+    @State private var newReserve = NewReserveModel(remitenteNombre: "", remitenteApellido: "", remitentePseudonimo: "", remitenteCurso: "", remitenteAnonimo: false, destinatarioNombre: "", destinatarioApellido: "", destinatarioPseudonimo: "", destinatarioCurso: "", totalAPagar: 0, dedicatoria: "", fotoURL: "", detalles: [])
     
     @State private var senderName = ""
     @State private var senderLastName = ""
@@ -33,6 +35,10 @@ struct NewReserveView: View {
     @State private var image: Image?
     
     @State private var textMessage = ""
+    private let textMessageMaxLenght = 40
+    @State private var typedCharacters = 0
+    
+    @State private var areEssentialFieldsCompleted = false
     
     let courses = [ "Séptimo A", "Séptimo B", "Octavo A", "Octavo B", "Primero Medio A", "Primero Medio B", "Primero Medio C", "Primero Medio D", "Segundo Medio A", "Segundo Medio B", "Segundo Medio C", "Segundo Medio D", "Tercero Medio A", "Tercero Medio B", "Tercero Medio C", "Tercero Medio D", "Cuarto Medio A", "Cuarto Medio B", "Cuarto Medio C", "Cuarto Medio D", "Profesor", "Personal del liceo"]
     
@@ -43,18 +49,35 @@ struct NewReserveView: View {
                 //MARK: - sender's data section
                 Section {
                     TextField("Nombre remitente", text: $senderName)
+                        .onChange(of: senderName) {
+                            newReserve.remitenteNombre = senderName
+                            areEssentialFieldsCompleted = newReserveViewModel.checkEssentialInputs(reserveModel: newReserve)
+                        }
                     
                     TextField("Apellido remitente", text: $senderLastName)
+                        .onChange(of: senderLastName) {
+                            newReserve.remitenteApellido = senderLastName
+                            areEssentialFieldsCompleted = newReserveViewModel.checkEssentialInputs(reserveModel: newReserve)
+                        }
                     
                     TextField("Seudónimo remitente (opcional)", text: $senderNickName)
+                        .onChange(of: senderNickName) {
+                            newReserve.remitentePseudonimo = senderNickName
+                        }
+                        
                     
                     Picker("Seleccionar curso", selection: $senderCourse) {
+                        Text("Selecciona curso")
+                            .tag("")
                         ForEach(courses, id: \.self) {
                             Text($0)
-                                .tag($0)
                         }
                     }
                     .pickerStyle(.menu)
+                    .onChange(of: senderCourse) {
+                        newReserve.remitenteCurso = senderCourse
+                        areEssentialFieldsCompleted = newReserveViewModel.checkEssentialInputs(reserveModel: newReserve)
+                    }
                     
                     Toggle(isOn: $senderAnonymous) {
                         HStack {
@@ -68,6 +91,9 @@ struct NewReserveView: View {
                             Spacer()
                         }
                     }
+                    .onChange(of: senderAnonymous) {
+                        newReserve.remitenteAnonimo = senderAnonymous
+                    }
                 } header: {
                     Text("Datos del remitente")
                 }
@@ -75,18 +101,34 @@ struct NewReserveView: View {
                 //MARK: - receiver's data section
                 Section {
                     TextField("Nombre receptor", text: $receiverName)
+                        .onChange(of: receiverName) {
+                            newReserve.destinatarioNombre = receiverName
+                            areEssentialFieldsCompleted = newReserveViewModel.checkEssentialInputs(reserveModel: newReserve)
+                        }
                     
                     TextField("Apellido receptor", text: $receiverLastName)
+                        .onChange(of: receiverLastName) {
+                            newReserve.destinatarioApellido = receiverLastName
+                            areEssentialFieldsCompleted = newReserveViewModel.checkEssentialInputs(reserveModel: newReserve)
+                        }
                     
-                    TextField("Seudónimi receptor (opcional)", text: $receiverName)
+                    TextField("Seudónimi receptor (opcional)", text: $receiverNickName)
+                        .onChange(of: receiverNickName) {
+                            newReserve.destinatarioPseudonimo = receiverNickName
+                        }
                     
                     Picker("Seleccionar curso", selection: $receiverCourse) {
+                        Text("Selecciona curso")
+                            .tag("")
                         ForEach(courses, id: \.self) {
                             Text($0)
                         }
                     }
                     .pickerStyle(.menu)
-                    .tag("1")
+                    .onChange(of: receiverCourse) {
+                        newReserve.destinatarioCurso = receiverCourse
+                        areEssentialFieldsCompleted = newReserveViewModel.checkEssentialInputs(reserveModel: newReserve)
+                    }
                     
                     
                 } header: {
@@ -164,7 +206,7 @@ struct NewReserveView: View {
                     Text("Rosas")
                 }
                 
-               
+               //MARK: - Section incluir foto y dedicatoria
                 Section {
                     Toggle("Incluír foto y dedicatoria", isOn: $includePhotoAndmessage)
                     
@@ -195,14 +237,31 @@ struct NewReserveView: View {
                             }
                         }
                         
-                        ZStack(alignment: .leading) {
+                        ZStack(alignment: .topLeading) {
                             if textMessage.isEmpty {
                                 Text("Escribe la dedicatoria")
                                     .foregroundStyle(.secondary)
-                                    .padding(4)
+                                    .padding(.top, 8)
+                                    .padding(.leading, 4)
                             }
                             
-                            TextEditor(text: $textMessage)
+                            VStack {
+                                TextEditor(text: $textMessage)
+                                    .onChange(of: textMessage) {
+                                        typedCharacters = textMessage.count
+                                        textMessage = String(textMessage.prefix(textMessageMaxLenght))
+                                    }
+                                    .overlay {
+                                        RoundedRectangle(cornerRadius: 8)
+                                            .stroke(Color.secondary, lineWidth: 1)
+                                    }
+                                
+                                if typedCharacters > 0 {
+                                    Text("\(typedCharacters)/\(textMessageMaxLenght)")
+                                        .frame(maxWidth: .infinity, alignment: .trailing)
+                                        .foregroundStyle(Color.secondary)
+                                }
+                            }
                         }
 
                     }
@@ -213,6 +272,11 @@ struct NewReserveView: View {
         }
         .navigationTitle("Nueva reserva")
         .navigationBarTitleDisplayMode(.inline)
+        .onChange(of: areEssentialFieldsCompleted) {
+            if areEssentialFieldsCompleted {
+                print(newReserve)
+            }
+        }
     }
 }
 
