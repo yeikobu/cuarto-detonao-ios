@@ -248,9 +248,9 @@ struct NewReserveView: View {
                             
                             image?
                                 .resizable()
-                                .scaledToFit()
                                 .clipShape(RoundedRectangle(cornerRadius: 12))
-                                .frame(maxWidth: 250, maxHeight: 250)
+                                .frame(width: 250, height: 250)
+                                .clipped()
                         }
                         .frame(maxWidth: .infinity, alignment: .center)
                         .onChange(of: imageItem) {
