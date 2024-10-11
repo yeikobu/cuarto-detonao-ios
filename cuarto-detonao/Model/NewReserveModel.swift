@@ -14,7 +14,7 @@ struct NewReserveModel: Codable {
     var totalAPagar: Int
     var dedicatoria: String?
     var fotoURL: String?
-    var detalles: [Detalle]
+    var detalles: [NewReserveDetalle]
 
     enum CodingKeys: String, CodingKey {
         case remitenteNombre = "remitente_nombre"
@@ -32,3 +32,15 @@ struct NewReserveModel: Codable {
         case detalles
     }
 }
+
+// MARK: - Detalle
+struct NewReserveDetalle: Codable, Hashable {
+    var colorNombre: String
+    var cantidad: Int
+
+    enum CodingKeys: String, CodingKey {
+        case colorNombre = "color_nombre"
+        case cantidad
+    }
+}
+

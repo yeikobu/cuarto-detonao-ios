@@ -22,6 +22,7 @@ struct NewReserveView: View {
     @State private var receiverLastName = ""
     @State private var receiverNickName = ""
     @State private var receiverCourse = ""
+    @State private var areEssentialFieldsCompleted = false
     
     @State private var redRosesQuantity = 0
     @State private var orangeRosesQuantity = 0
@@ -29,6 +30,7 @@ struct NewReserveView: View {
     @State private var purpleRosesQuantity = 0
     @State private var yellowRosesQuantity = 0
     @State private var whiteRosesQuantity = 0
+    @State private var isThereAlmostOneRoseSelected = false
     
     @State private var includePhotoAndmessage = false
     @State private var imageItem: PhotosPickerItem?
@@ -38,7 +40,6 @@ struct NewReserveView: View {
     private let textMessageMaxLenght = 40
     @State private var typedCharacters = 0
     
-    @State private var areEssentialFieldsCompleted = false
     
     let courses = [ "Séptimo A", "Séptimo B", "Octavo A", "Octavo B", "Primero Medio A", "Primero Medio B", "Primero Medio C", "Primero Medio D", "Segundo Medio A", "Segundo Medio B", "Segundo Medio C", "Segundo Medio D", "Tercero Medio A", "Tercero Medio B", "Tercero Medio C", "Tercero Medio D", "Cuarto Medio A", "Cuarto Medio B", "Cuarto Medio C", "Cuarto Medio D", "Profesor", "Personal del liceo"]
     
@@ -147,6 +148,10 @@ struct NewReserveView: View {
                                 .padding(.trailing, 4)
                         }
                     }
+                    .onChange(of: redRosesQuantity) {
+                        updateRosesDetails(roseColor: RosesColor.red.rawValue, roseQuantity: redRosesQuantity)
+                        isThereAlmostOneRoseSelected = newReserveViewModel.checkIfAlmostOneRoseIsSelected(roses: newReserve.detalles)
+                    }
                     
                     Stepper(value: $orangeRosesQuantity, in: 0...20) {
                         HStack {
@@ -157,6 +162,10 @@ struct NewReserveView: View {
                             Text("\(orangeRosesQuantity)")
                                 .padding(.trailing, 4)
                         }
+                    }
+                    .onChange(of: orangeRosesQuantity) {
+                        updateRosesDetails(roseColor: RosesColor.orange.rawValue, roseQuantity: orangeRosesQuantity)
+                        isThereAlmostOneRoseSelected = newReserveViewModel.checkIfAlmostOneRoseIsSelected(roses: newReserve.detalles)
                     }
                     
                     Stepper(value: $blueRosesQuantity, in: 0...20) {
@@ -169,6 +178,10 @@ struct NewReserveView: View {
                                 .padding(.trailing, 4)
                         }
                     }
+                    .onChange(of: blueRosesQuantity) {
+                        updateRosesDetails(roseColor: RosesColor.blue.rawValue, roseQuantity: blueRosesQuantity)
+                        isThereAlmostOneRoseSelected = newReserveViewModel.checkIfAlmostOneRoseIsSelected(roses: newReserve.detalles)
+                    }
                     
                     Stepper(value: $purpleRosesQuantity, in: 0...20) {
                         HStack {
@@ -179,6 +192,10 @@ struct NewReserveView: View {
                             Text("\(purpleRosesQuantity)")
                                 .padding(.trailing, 4)
                         }
+                    }
+                    .onChange(of: purpleRosesQuantity) {
+                        updateRosesDetails(roseColor: RosesColor.purple.rawValue, roseQuantity: blueRosesQuantity)
+                        isThereAlmostOneRoseSelected = newReserveViewModel.checkIfAlmostOneRoseIsSelected(roses: newReserve.detalles)
                     }
                     
                     Stepper(value: $yellowRosesQuantity, in: 0...20) {
@@ -191,6 +208,10 @@ struct NewReserveView: View {
                                 .padding(.trailing, 4)
                         }
                     }
+                    .onChange(of: yellowRosesQuantity) {
+                        updateRosesDetails(roseColor: RosesColor.yellow.rawValue, roseQuantity: yellowRosesQuantity)
+                        isThereAlmostOneRoseSelected = newReserveViewModel.checkIfAlmostOneRoseIsSelected(roses: newReserve.detalles)
+                    }
                     
                     Stepper(value: $whiteRosesQuantity, in: 0...20) {
                         HStack {
@@ -201,6 +222,10 @@ struct NewReserveView: View {
                             Text("\(whiteRosesQuantity)")
                                 .padding(.trailing, 4)
                         }
+                    }
+                    .onChange(of: whiteRosesQuantity) {
+                        updateRosesDetails(roseColor: RosesColor.white.rawValue, roseQuantity: whiteRosesQuantity)
+                        isThereAlmostOneRoseSelected = newReserveViewModel.checkIfAlmostOneRoseIsSelected(roses: newReserve.detalles)
                     }
                 } header: {
                     Text("Rosas")
@@ -272,11 +297,23 @@ struct NewReserveView: View {
         }
         .navigationTitle("Nueva reserva")
         .navigationBarTitleDisplayMode(.inline)
-        .onChange(of: areEssentialFieldsCompleted) {
-            if areEssentialFieldsCompleted {
-                print(newReserve)
+        .toolbar {
+            if isThereAlmostOneRoseSelected && areEssentialFieldsCompleted && !includePhotoAndmessage {
+                Button("Finalizar") {
+                    
+                }
             }
         }
+    }
+    
+    func updateRosesDetails(roseColor: String, roseQuantity: Int) {
+        if let index = newReserve.detalles.firstIndex(where: { $0.colorNombre == roseColor }) {
+            newReserve.detalles[index].cantidad = roseQuantity
+        } else if redRosesQuantity > 0 {
+            newReserve.detalles.append(NewReserveDetalle(colorNombre: "Roja", cantidad: roseQuantity))
+        }
+
+        newReserve.detalles = newReserve.detalles.filter { $0.cantidad > 0 }
     }
 }
 
