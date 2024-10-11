@@ -35,6 +35,7 @@ struct NewReserveView: View {
     @State private var includePhotoAndmessage = false
     @State private var imageItem: PhotosPickerItem?
     @State private var image: Image?
+    @State private var areImageAndMessageCompleted = false
     
     @State private var textMessage = ""
     private let textMessageMaxLenght = 40
@@ -259,6 +260,8 @@ struct NewReserveView: View {
                                 } else {
                                     print("Falló al cargar la imagen en el dispositivo")
                                 }
+                                
+                                areImageAndMessageCompleted = image != nil && !textMessage.isEmpty
                             }
                         }
                         
@@ -275,6 +278,7 @@ struct NewReserveView: View {
                                     .onChange(of: textMessage) {
                                         typedCharacters = textMessage.count
                                         textMessage = String(textMessage.prefix(textMessageMaxLenght))
+                                        areImageAndMessageCompleted = image != nil && !textMessage.isEmpty
                                     }
                                     .overlay {
                                         RoundedRectangle(cornerRadius: 8)
@@ -299,6 +303,12 @@ struct NewReserveView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             if isThereAlmostOneRoseSelected && areEssentialFieldsCompleted && !includePhotoAndmessage {
+                Button("Finalizar") {
+                    
+                }
+            }
+            
+            if includePhotoAndmessage && isThereAlmostOneRoseSelected && areEssentialFieldsCompleted && areImageAndMessageCompleted {
                 Button("Finalizar") {
                     
                 }
