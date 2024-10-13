@@ -15,7 +15,7 @@ struct ReservesView: View {
     @State private var showDeleteWarning = false
     @State private var deletingData = false
     @State private var isReserveDeleted = false
-    @State private var reserveToDelete: ReserveModel? 
+    @State private var reserveToDelete: ReserveModel?
     
     // Estado de la búsqueda de una reserva
     @State private var searchedText = ""
@@ -57,8 +57,8 @@ struct ReservesView: View {
                                 Label("Pagar", systemImage: "creditcard")
                             }
                             
-                            Button {
-                                //
+                            NavigationLink {
+                                ReserveView(reserveModel: reserve)
                             } label: {
                                 Label("Ver detalles", systemImage: "info.circle")
                             }
