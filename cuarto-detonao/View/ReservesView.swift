@@ -103,13 +103,6 @@ struct ReservesView: View {
                         }
                     }
                 }
-                .toolbar {
-                    ToolbarItem {
-                        Button("Nueva reserva") {
-                            newReserve.toggle()
-                        }
-                    }
-                }
                 .refreshable {
                     Task {
                         await viewModel.fetchReserves()
@@ -147,6 +140,13 @@ struct ReservesView: View {
             fetchingData = true
             await viewModel.fetchReserves()
             fetchingData = false
+        }
+        .toolbar {
+            ToolbarItem {
+                Button("Nueva reserva") {
+                    newReserve.toggle()
+                }
+            }
         }
     }
 }

@@ -44,3 +44,13 @@ struct NewReserveDetalle: Codable, Hashable {
     }
 }
 
+struct NewReserveResponse: Decodable {
+    var message: String
+    var numeroReserva: Int
+    
+    enum CodingKeys: String, CodingKey {
+        case message
+        case numeroReserva = "numero_reserva"
+    }
+}
+

@@ -6,8 +6,14 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		5A321CED2CBAE973005D227B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5A321CEC2CBAE973005D227B /* GoogleService-Info.plist */; };
+		5A321CF02CBAE9DF005D227B /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 5A321CEF2CBAE9DF005D227B /* FirebaseStorage */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		5A14CBF72CB4BD70007EFEA2 /* cuarto-detonao.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "cuarto-detonao.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5A321CEC2CBAE973005D227B /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -23,6 +29,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5A321CF02CBAE9DF005D227B /* FirebaseStorage in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -34,6 +41,7 @@
 			children = (
 				5A14CBF92CB4BD70007EFEA2 /* cuarto-detonao */,
 				5A14CBF82CB4BD70007EFEA2 /* Products */,
+				5A321CEC2CBAE973005D227B /* GoogleService-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -65,6 +73,7 @@
 			);
 			name = "cuarto-detonao";
 			packageProductDependencies = (
+				5A321CEF2CBAE9DF005D227B /* FirebaseStorage */,
 			);
 			productName = "cuarto-detonao";
 			productReference = 5A14CBF72CB4BD70007EFEA2 /* cuarto-detonao.app */;
@@ -94,6 +103,9 @@
 			);
 			mainGroup = 5A14CBEE2CB4BD70007EFEA2;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				5A321CEE2CBAE9DF005D227B /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 5A14CBF82CB4BD70007EFEA2 /* Products */;
 			projectDirPath = "";
@@ -109,6 +121,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5A321CED2CBAE973005D227B /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -255,6 +268,7 @@
 				DEVELOPMENT_TEAM = 6Z8MU97UL5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Cuarto Detonao ";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -284,6 +298,7 @@
 				DEVELOPMENT_TEAM = 6Z8MU97UL5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Cuarto Detonao ";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -324,6 +339,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		5A321CEE2CBAE9DF005D227B /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.3.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		5A321CEF2CBAE9DF005D227B /* FirebaseStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5A321CEE2CBAE9DF005D227B /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseStorage;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 5A14CBEF2CB4BD70007EFEA2 /* Project object */;
 }
