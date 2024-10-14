@@ -105,9 +105,9 @@ struct UpdateReserveView: View {
                             Spacer()
                         }
                     }
-                    .onChange(of: reserveToUpdate.remitenteAnonimo) {
-                        reserveToUpdate.remitenteAnonimo = senderAnonymous
-                    }
+//                    .onChange(of: reserveToUpdate.remitenteAnonimo) {
+//                        reserveToUpdate.remitenteAnonimo = senderAnonymous
+//                    }
                 } header: {
                     Text("Datos del remitente")
                 }
@@ -383,17 +383,7 @@ struct UpdateReserveView: View {
         }
         .overlay {
             if showCreatingReserve {
-                VStack {
-                    Text("Actualizando reserva...")
-                    
-                    ProgressView()
-                        .scaleEffect(1.4)
-                }
-                .padding(12)
-                .background(
-                    RoundedRectangle(cornerRadius: 12)
-                        .fill(.ultraThickMaterial)
-                )
+                WaitingAlertView(message: "Actualizando reserva...")
             }
         }
         .alert("Reserva actualizada exitosamente", isPresented: $isReserveUpdated) {

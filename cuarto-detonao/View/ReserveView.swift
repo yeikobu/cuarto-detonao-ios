@@ -212,18 +212,7 @@ struct ReserveView: View {
         }
         .overlay {
             if deletingData {
-                VStack {
-                    Text("Eliminando reserva..")
-                        .font(.title2)
-                    
-                    ProgressView()
-                        .scaleEffect(1.4)
-                }
-                .padding(8)
-                .background(
-                    RoundedRectangle(cornerRadius: 12)
-                        .fill(.ultraThinMaterial)
-                )
+                WaitingAlertView(message: "Eliminando reserva")
             }
         }
     }

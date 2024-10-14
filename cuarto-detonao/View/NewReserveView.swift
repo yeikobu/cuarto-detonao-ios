@@ -366,18 +366,7 @@ struct NewReserveView: View {
         }
         .overlay {
             if showCreatingReserve {
-                VStack {
-                    Text("Creando reserva...")
-                        .font(.title2)
-                    
-                    ProgressView()
-                        .scaleEffect(1.4)
-                }
-                .padding(8)
-                .background(
-                    RoundedRectangle(cornerRadius: 12)
-                        .fill(.ultraThinMaterial)
-                )
+                WaitingAlertView(message: "Creando reserva...")
             }
         }
         .alert("Reserva creada exitosamente", isPresented: $isReserveCreated) {
