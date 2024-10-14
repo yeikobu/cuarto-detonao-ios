@@ -12,7 +12,7 @@ struct UpdateReserveView: View {
     @Environment(\.dismiss) var dismiss
     
     var selectedReserve: ReserveModel
-    @State private var newReserveViewModel = NewReserveViewModel()
+    @State private var updateReserveViewModel = UpdateReserveViewModel()
     @State private var reserveToUpdate = NewReserveModel(remitenteNombre: "", remitenteApellido: "", remitentePseudonimo: "", remitenteCurso: "", remitenteAnonimo: false, destinatarioNombre: "", destinatarioApellido: "", destinatarioPseudonimo: "", destinatarioCurso: "", totalAPagar: 0, dedicatoria: "", fotoURL: "", detalles: [])
     
     @State private var detalles: [NewReserveDetalle] = []
@@ -49,7 +49,7 @@ struct UpdateReserveView: View {
     
     @State private var showCreatingReserve = false
     @State private var reserveNumber = 0
-    @State private var isReserveCreated = false
+    @State private var isReserveUpdated = false
     
     @State private var totalToPay = 0
     
@@ -65,13 +65,13 @@ struct UpdateReserveView: View {
                     TextField("Nombre remitente", text: $reserveToUpdate.remitenteNombre)
                         .onChange(of: reserveToUpdate.remitenteNombre) {
 //                            reserveToUpdate.remitenteNombre = senderName
-                            areEssentialFieldsCompleted = newReserveViewModel.checkEssentialInputs(reserveModel: reserveToUpdate)
+                            areEssentialFieldsCompleted = updateReserveViewModel.checkEssentialInputs(reserveModel: reserveToUpdate)
                         }
                     
                     TextField("Apellido remitente", text: $reserveToUpdate.remitenteApellido)
                         .onChange(of: reserveToUpdate.remitenteApellido) {
 //                            reserveToUpdate.remitenteApellido = senderLastName
-                            areEssentialFieldsCompleted = newReserveViewModel.checkEssentialInputs(reserveModel: reserveToUpdate)
+                            areEssentialFieldsCompleted = updateReserveViewModel.checkEssentialInputs(reserveModel: reserveToUpdate)
                         }
                     
                     TextField("Seudónimo remitente (opcional)", text: $reserveToUpdate.remitentePseudonimo)
@@ -90,7 +90,7 @@ struct UpdateReserveView: View {
                     .pickerStyle(.menu)
                     .onChange(of: reserveToUpdate.remitenteCurso) {
 //                        reserveToUpdate.remitenteCurso = senderCourse
-                        areEssentialFieldsCompleted = newReserveViewModel.checkEssentialInputs(reserveModel: reserveToUpdate)
+                        areEssentialFieldsCompleted = updateReserveViewModel.checkEssentialInputs(reserveModel: reserveToUpdate)
                     }
                     
                     Toggle(isOn: $reserveToUpdate.remitenteAnonimo) {
@@ -117,13 +117,13 @@ struct UpdateReserveView: View {
                     TextField("Nombre receptor", text: $reserveToUpdate.destinatarioNombre)
                         .onChange(of: reserveToUpdate.destinatarioNombre) {
 //                            reserveToUpdate.destinatarioNombre = receiverName
-                            areEssentialFieldsCompleted = newReserveViewModel.checkEssentialInputs(reserveModel: reserveToUpdate)
+                            areEssentialFieldsCompleted = updateReserveViewModel.checkEssentialInputs(reserveModel: reserveToUpdate)
                         }
                     
                     TextField("Apellido receptor", text: $reserveToUpdate.destinatarioApellido)
                         .onChange(of: reserveToUpdate.destinatarioApellido) {
 //                            reserveToUpdate.destinatarioApellido = receiverLastName
-                            areEssentialFieldsCompleted = newReserveViewModel.checkEssentialInputs(reserveModel: reserveToUpdate)
+                            areEssentialFieldsCompleted = updateReserveViewModel.checkEssentialInputs(reserveModel: reserveToUpdate)
                         }
                     
                     TextField("Seudónimo receptor (opcional)", text: $reserveToUpdate.destinatarioPseudonimo)
@@ -141,7 +141,7 @@ struct UpdateReserveView: View {
                     .pickerStyle(.menu)
                     .onChange(of: reserveToUpdate.destinatarioCurso) {
 //                        reserveToUpdate.destinatarioCurso = receiverCourse
-                        areEssentialFieldsCompleted = newReserveViewModel.checkEssentialInputs(reserveModel: reserveToUpdate)
+                        areEssentialFieldsCompleted = updateReserveViewModel.checkEssentialInputs(reserveModel: reserveToUpdate)
                     }
                     
                     
@@ -161,8 +161,8 @@ struct UpdateReserveView: View {
                     }
                     .onChange(of: redRosesQuantity) {
                         updateRosesDetails(roseColor: RosesColor.red.rawValue, roseQuantity: redRosesQuantity)
-                        isThereAlmostOneRoseSelected = newReserveViewModel.checkIfAlmostOneRoseIsSelected(roses: reserveToUpdate.detalles)
-                        totalToPay = newReserveViewModel.calculateTotal(reserveModel: reserveToUpdate, includePhotoAndMessage: includePhotoAndMessage)
+                        isThereAlmostOneRoseSelected = updateReserveViewModel.checkIfAlmostOneRoseIsSelected(roses: reserveToUpdate.detalles)
+                        totalToPay = updateReserveViewModel.calculateTotal(reserveModel: reserveToUpdate, includePhotoAndMessage: includePhotoAndMessage)
                     }
                     
                     Stepper(value: $orangeRosesQuantity, in: 0...20) {
@@ -175,8 +175,8 @@ struct UpdateReserveView: View {
                     }
                     .onChange(of: orangeRosesQuantity) {
                         updateRosesDetails(roseColor: RosesColor.orange.rawValue, roseQuantity: orangeRosesQuantity)
-                        isThereAlmostOneRoseSelected = newReserveViewModel.checkIfAlmostOneRoseIsSelected(roses: reserveToUpdate.detalles)
-                        totalToPay = newReserveViewModel.calculateTotal(reserveModel: reserveToUpdate, includePhotoAndMessage: includePhotoAndMessage)
+                        isThereAlmostOneRoseSelected = updateReserveViewModel.checkIfAlmostOneRoseIsSelected(roses: reserveToUpdate.detalles)
+                        totalToPay = updateReserveViewModel.calculateTotal(reserveModel: reserveToUpdate, includePhotoAndMessage: includePhotoAndMessage)
                     }
                     
                     Stepper(value: $blueRosesQuantity, in: 0...20) {
@@ -189,8 +189,8 @@ struct UpdateReserveView: View {
                     }
                     .onChange(of: blueRosesQuantity) {
                         updateRosesDetails(roseColor: RosesColor.blue.rawValue, roseQuantity: blueRosesQuantity)
-                        isThereAlmostOneRoseSelected = newReserveViewModel.checkIfAlmostOneRoseIsSelected(roses: reserveToUpdate.detalles)
-                        totalToPay = newReserveViewModel.calculateTotal(reserveModel: reserveToUpdate, includePhotoAndMessage: includePhotoAndMessage)
+                        isThereAlmostOneRoseSelected = updateReserveViewModel.checkIfAlmostOneRoseIsSelected(roses: reserveToUpdate.detalles)
+                        totalToPay = updateReserveViewModel.calculateTotal(reserveModel: reserveToUpdate, includePhotoAndMessage: includePhotoAndMessage)
                     }
                     
                     Stepper(value: $purpleRosesQuantity, in: 0...20) {
@@ -203,8 +203,8 @@ struct UpdateReserveView: View {
                     }
                     .onChange(of: purpleRosesQuantity) {
                         updateRosesDetails(roseColor: RosesColor.purple.rawValue, roseQuantity: purpleRosesQuantity)
-                        isThereAlmostOneRoseSelected = newReserveViewModel.checkIfAlmostOneRoseIsSelected(roses: reserveToUpdate.detalles)
-                        totalToPay = newReserveViewModel.calculateTotal(reserveModel: reserveToUpdate, includePhotoAndMessage: includePhotoAndMessage)
+                        isThereAlmostOneRoseSelected = updateReserveViewModel.checkIfAlmostOneRoseIsSelected(roses: reserveToUpdate.detalles)
+                        totalToPay = updateReserveViewModel.calculateTotal(reserveModel: reserveToUpdate, includePhotoAndMessage: includePhotoAndMessage)
                     }
                     
                     Stepper(value: $yellowRosesQuantity, in: 0...20) {
@@ -217,8 +217,8 @@ struct UpdateReserveView: View {
                     }
                     .onChange(of: yellowRosesQuantity) {
                         updateRosesDetails(roseColor: RosesColor.yellow.rawValue, roseQuantity: yellowRosesQuantity)
-                        isThereAlmostOneRoseSelected = newReserveViewModel.checkIfAlmostOneRoseIsSelected(roses: reserveToUpdate.detalles)
-                        totalToPay = newReserveViewModel.calculateTotal(reserveModel: reserveToUpdate, includePhotoAndMessage: includePhotoAndMessage)
+                        isThereAlmostOneRoseSelected = updateReserveViewModel.checkIfAlmostOneRoseIsSelected(roses: reserveToUpdate.detalles)
+                        totalToPay = updateReserveViewModel.calculateTotal(reserveModel: reserveToUpdate, includePhotoAndMessage: includePhotoAndMessage)
                     }
                     
                     Stepper(value: $whiteRosesQuantity, in: 0...20) {
@@ -231,8 +231,8 @@ struct UpdateReserveView: View {
                     }
                     .onChange(of: whiteRosesQuantity) {
                         updateRosesDetails(roseColor: RosesColor.white.rawValue, roseQuantity: whiteRosesQuantity)
-                        isThereAlmostOneRoseSelected = newReserveViewModel.checkIfAlmostOneRoseIsSelected(roses: reserveToUpdate.detalles)
-                        totalToPay = newReserveViewModel.calculateTotal(reserveModel: reserveToUpdate, includePhotoAndMessage: includePhotoAndMessage)
+                        isThereAlmostOneRoseSelected = updateReserveViewModel.checkIfAlmostOneRoseIsSelected(roses: reserveToUpdate.detalles)
+                        totalToPay = updateReserveViewModel.calculateTotal(reserveModel: reserveToUpdate, includePhotoAndMessage: includePhotoAndMessage)
                     }
                 } header: {
                     Text("Rosas")
@@ -247,7 +247,7 @@ struct UpdateReserveView: View {
                                 reserveToUpdate.dedicatoria = nil
                                 imageSelected = false
                             }
-                            totalToPay = newReserveViewModel.calculateTotal(reserveModel: reserveToUpdate, includePhotoAndMessage: includePhotoAndMessage)
+                            totalToPay = updateReserveViewModel.calculateTotal(reserveModel: reserveToUpdate, includePhotoAndMessage: includePhotoAndMessage)
                         }
                     
                     if includePhotoAndMessage {
@@ -354,33 +354,31 @@ struct UpdateReserveView: View {
         .toolbar {
             if isThereAlmostOneRoseSelected && areEssentialFieldsCompleted && !includePhotoAndMessage {
                 Button("Finalizar") {
+                    print("Finalizar")
                     Task {
                         showCreatingReserve = true
                         reserveToUpdate.totalAPagar = totalToPay
-                        if let responseReserveNumber = await newReserveViewModel.createNewReserve(reserveData: reserveToUpdate) {
-                            self.reserveNumber = responseReserveNumber
-                        }
+                        isReserveUpdated = await updateReserveViewModel.updateReserveByID(id: selectedReserve.id, reserveModel: reserveToUpdate)
                         showCreatingReserve = false
-                        isReserveCreated = self.reserveNumber > 0
                     }
                 }
             }
             
             if includePhotoAndMessage && isThereAlmostOneRoseSelected && areEssentialFieldsCompleted && areImageAndMessageCompleted {
                 Button("Finalizar") {
+                    print("Finalizar")
                     Task {
                         showCreatingReserve = true
                         reserveToUpdate.totalAPagar = totalToPay
+                        
                         if let image = image {
-                            let imageURL = await newReserveViewModel.uploadImageToFirebase(image: image, from: "\(reserveToUpdate.remitenteNombre)\(reserveToUpdate.remitenteApellido)", to: "\(reserveToUpdate.destinatarioNombre)\(reserveToUpdate.destinatarioApellido)")
+                            let imageURL = await updateReserveViewModel.uploadImageToFirebase(image: image, from: "\(reserveToUpdate.remitenteNombre)\(reserveToUpdate.remitenteApellido)", to: "\(reserveToUpdate.destinatarioNombre)\(reserveToUpdate.destinatarioApellido)")
                             reserveToUpdate.fotoURL = imageURL
                             reserveToUpdate.dedicatoria = textMessage
-                            if let responseReserveNumber = await newReserveViewModel.createNewReserve(reserveData: reserveToUpdate) {
-                                self.reserveNumber = responseReserveNumber
-                            }
                         }
+                        
+                        isReserveUpdated = await updateReserveViewModel.updateReserveByID(id: selectedReserve.id, reserveModel: reserveToUpdate)
                         showCreatingReserve = false
-                        isReserveCreated = self.reserveNumber > 0
                     }
                 }
             }
@@ -401,12 +399,10 @@ struct UpdateReserveView: View {
                 )
             }
         }
-        .alert("Reserva creada exitosamente", isPresented: $isReserveCreated) {
+        .alert("Reserva creada exitosamente", isPresented: $isReserveUpdated) {
             Button("Aceptar") {
                 dismiss()
             }
-        } message: {
-            Text("Número de reserva: \(reserveNumber)")
         }
         .onAppear {
             selectedReserve.detalles.forEach { detalle in
@@ -434,7 +430,11 @@ struct UpdateReserveView: View {
                 includePhotoAndMessage = true
             }
             
-            reserveToUpdate = NewReserveModel(remitenteNombre: selectedReserve.remitenteNombre, remitenteApellido: selectedReserve.remitenteApellido, remitentePseudonimo: selectedReserve.remitentePseudonimo, remitenteCurso: selectedReserve.remitenteCurso, remitenteAnonimo: selectedReserve.remitenteAnonimo, destinatarioNombre: selectedReserve.destinatarioNombre, destinatarioApellido: selectedReserve.destinatarioApellido, destinatarioPseudonimo: selectedReserve.destinatarioPseudonimo, destinatarioCurso: selectedReserve.destinatarioCurso, totalAPagar: selectedReserve.totalAPagar, detalles: detalles)
+            reserveToUpdate = NewReserveModel(remitenteNombre: selectedReserve.remitenteNombre, remitenteApellido: selectedReserve.remitenteApellido, remitentePseudonimo: selectedReserve.remitentePseudonimo, remitenteCurso: selectedReserve.remitenteCurso, remitenteAnonimo: selectedReserve.remitenteAnonimo, destinatarioNombre: selectedReserve.destinatarioNombre, destinatarioApellido: selectedReserve.destinatarioApellido, destinatarioPseudonimo: selectedReserve.destinatarioPseudonimo, destinatarioCurso: selectedReserve.destinatarioCurso, totalAPagar: selectedReserve.totalAPagar, dedicatoria: selectedReserve.dedicatoria, fotoURL: selectedReserve.fotoURL,  detalles: detalles)
+            
+            areEssentialFieldsCompleted = updateReserveViewModel.checkEssentialInputs(reserveModel: reserveToUpdate)
+            isThereAlmostOneRoseSelected = updateReserveViewModel.checkIfAlmostOneRoseIsSelected(roses: reserveToUpdate.detalles)
+            areImageAndMessageCompleted = (image != nil && !textMessage.isEmpty) || (selectedReserve.fotoURL != nil && selectedReserve.dedicatoria != nil)
             
             textMessage = selectedReserve.dedicatoria ?? ""
         }
