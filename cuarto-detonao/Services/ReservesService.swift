@@ -43,6 +43,25 @@ final class ReservesService {
         return reserveResponse
     }
     
+    func updateReserveByID(id: Int, reserveData: NewReserveModel) async throws {
+        guard let updateReserveURL = URL(string: "\(baseURL)/reserve/\(id)") else { return  }
+        
+        var request = URLRequest(url: updateReserveURL)
+        request.httpMethod = "PUT"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let jsonData = try JSONEncoder().encode(reserveData)
+        request.httpBody = jsonData
+        
+        let (data, response) = try await URLSession.shared.data(for: request)
+        
+        if let apiResponse = response as? HTTPURLResponse, !(200...299).contains(apiResponse.statusCode) {
+            throw NSError(domain: "APIService", code: apiResponse.statusCode, userInfo: [NSLocalizedDescriptionKey: "Error al actualizar: \(apiResponse.statusCode)"])
+        }
+        
+        let reserveResponse = try JSONDecoder().decode(NewReserveModel.self, from: data)
+    }
+    
     func deleteReserveByID(id: Int) async throws -> String {
         guard let url = URL(string: "\(baseURL)/reserve/\(id)") else { return "" }
         

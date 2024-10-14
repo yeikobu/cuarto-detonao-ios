@@ -63,8 +63,8 @@ struct ReservesView: View {
                                 Label("Ver detalles", systemImage: "info.circle")
                             }
                             
-                            Button {
-                                //
+                            NavigationLink {
+                                UpdateReserveView(selectedReserve: reserve)
                             } label: {
                                 Label("Editar", systemImage: "pencil.and.list.clipboard")
                             }
