@@ -26,47 +26,47 @@ struct ReserveView: View {
                 Section {
                     HStack {
                         Text("ID de Reserva")
+                            .foregroundStyle(.secondary)
                         
                         Spacer()
                         
                         Text("\(reserveModel.id)")
-                            .fontWeight(.bold)
                     }
                     
                     HStack {
                         Text("Nombre")
+                            .foregroundStyle(.secondary)
                         
                         Spacer()
                         
                         Text("\(reserveModel.remitenteNombre) \(reserveModel.remitenteApellido)")
-                            .fontWeight(.bold)
                     }
                     
                     HStack {
                         Text("Seudónimo")
+                            .foregroundStyle(.secondary)
                         
                         Spacer()
                         
                         Text("\(reserveModel.remitentePseudonimo)")
-                            .fontWeight(.bold)
                     }
                     
                     HStack {
                         Text("Curso")
+                            .foregroundStyle(.secondary)
                         
                         Spacer()
                         
                         Text("\(reserveModel.remitenteCurso)")
-                            .fontWeight(.bold)
                     }
                     
                     HStack {
                         Text("Anónimo")
+                            .foregroundStyle(.secondary)
                         
                         Spacer()
                         
                         Text(reserveModel.remitenteAnonimo ? "Sí" : "No")
-                            .fontWeight(.bold)
                     }
                 } header: {
                     Text("Datos remitente")
@@ -76,29 +76,29 @@ struct ReserveView: View {
                 Section {
                     HStack {
                         Text("Nombre")
+                            .foregroundStyle(.secondary)
                         
                         Spacer()
                         
                         Text("\(reserveModel.destinatarioNombre) \(reserveModel.destinatarioApellido)")
-                            .fontWeight(.bold)
                     }
                     
                     HStack {
                         Text("Seudónimo")
+                            .foregroundStyle(.secondary)
                         
                         Spacer()
                         
                         Text("\(reserveModel.destinatarioPseudonimo)")
-                            .fontWeight(.bold)
                     }
                     
                     HStack {
                         Text("Curso")
+                            .foregroundStyle(.secondary)
                         
                         Spacer()
                         
                         Text("\(reserveModel.destinatarioCurso)")
-                            .fontWeight(.bold)
                     }
                 } header: {
                     Text("Datos destinatario")
@@ -108,51 +108,58 @@ struct ReserveView: View {
                 Section {
                     HStack {
                         Text("Total a pagar")
+                            .foregroundStyle(.secondary)
                         
                         Spacer()
                         
                         Text("$\(reserveModel.totalAPagar)")
-                            .font(.title2)
-                            .fontWeight(.bold)
+                            .font(.title3)
                     }
                     
                     HStack {
                         Text("Fecha reserva")
+                            .foregroundStyle(.secondary)
                         
                         Spacer()
                         
                         Text("\(date)")
                             .font(.footnote)
-                            .fontWeight(.bold)
                             .frame(maxWidth: 170, alignment: .trailing)
                             .multilineTextAlignment(.trailing)
                     }
                     
                     if let foto = reserveModel.fotoURL {
-                        AsyncImage(url: URL(string: foto)) { image in
-                            image.image?.resizable()
+                        VStack {
+                            AsyncImage(url: URL(string: foto)) { image in
+                                image.image?
+                                    .resizable()
+                                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                                    .frame(width: 250, height: 250)
+                                    .clipped()
+                            }
                         }
-                        .frame(width: 200, height: 200)
+                        .frame(maxWidth: .infinity, alignment: .center)
                     }
                     
                     if let dedicatoria = reserveModel.dedicatoria {
                         VStack {
                             Text("Dedicatoria")
+                                .foregroundStyle(.secondary)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                             
-                            Text(dedicatoria)
-                                .fontWeight(.bold)
+                            Text("\(dedicatoria)")
+                                .italic()
                         }
                     }
                     
                     ForEach(reserveModel.detalles, id: \.self) { rose in
                         HStack {
-                            Text(rose.cantidad > 1 ? "Rosas \(rose.colorNombre)s" : "Rosa \(rose.colorNombre)")
+                            Text("Rosa \(rose.colorNombre)")
+                                .foregroundStyle(.secondary)
                             
                             Spacer()
                             
                             Text("\(rose.cantidad)")
-                                .fontWeight(.bold)
                         }
                     }
                 } header: {

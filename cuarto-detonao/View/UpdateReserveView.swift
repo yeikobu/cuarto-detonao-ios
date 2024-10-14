@@ -392,7 +392,7 @@ struct UpdateReserveView: View {
                 .padding(12)
                 .background(
                     RoundedRectangle(cornerRadius: 12)
-                        .fill(.ultraThinMaterial)
+                        .fill(.ultraThickMaterial)
                 )
             }
         }
