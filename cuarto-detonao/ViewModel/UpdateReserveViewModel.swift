@@ -62,14 +62,18 @@ class UpdateReserveViewModel {
     }
     
     func updateReserveByID(id: Int, reserveModel: NewReserveModel) async -> Bool {
+        var reserveUpdatedSuccessfully = false
         do {
-            try await reservesService.updateReserveByID(id: id, reserveData: reserveModel)
-            return true
+            reserveUpdatedSuccessfully = try await reservesService.updateReserveByID(id: id, reserveData: reserveModel)
         } catch {
+            print(error)
             errorMessage = "No se pudo actualizar la reserva"
             showError = true
+            reserveUpdatedSuccessfully = false
         }
         
-        return false
+        print(reserveUpdatedSuccessfully)
+        
+        return reserveUpdatedSuccessfully
     }
 }

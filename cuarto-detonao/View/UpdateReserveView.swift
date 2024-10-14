@@ -354,7 +354,6 @@ struct UpdateReserveView: View {
         .toolbar {
             if isThereAlmostOneRoseSelected && areEssentialFieldsCompleted && !includePhotoAndMessage {
                 Button("Finalizar") {
-                    print("Finalizar")
                     Task {
                         showCreatingReserve = true
                         reserveToUpdate.totalAPagar = totalToPay
@@ -366,7 +365,6 @@ struct UpdateReserveView: View {
             
             if includePhotoAndMessage && isThereAlmostOneRoseSelected && areEssentialFieldsCompleted && areImageAndMessageCompleted {
                 Button("Finalizar") {
-                    print("Finalizar")
                     Task {
                         showCreatingReserve = true
                         reserveToUpdate.totalAPagar = totalToPay
@@ -386,22 +384,21 @@ struct UpdateReserveView: View {
         .overlay {
             if showCreatingReserve {
                 VStack {
-                    Text("Creando reserva...")
-                        .font(.title2)
+                    Text("Actualizando reserva...")
                     
                     ProgressView()
                         .scaleEffect(1.4)
                 }
-                .padding(8)
+                .padding(12)
                 .background(
                     RoundedRectangle(cornerRadius: 12)
                         .fill(.ultraThinMaterial)
                 )
             }
         }
-        .alert("Reserva creada exitosamente", isPresented: $isReserveUpdated) {
+        .alert("Reserva actualizada exitosamente", isPresented: $isReserveUpdated) {
             Button("Aceptar") {
-                dismiss()
+//                dismiss()
             }
         }
         .onAppear {
