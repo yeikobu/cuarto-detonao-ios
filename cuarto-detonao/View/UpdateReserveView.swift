@@ -349,7 +349,7 @@ struct UpdateReserveView: View {
                 }
             }
         }
-        .navigationTitle("Nueva reserva")
+        .navigationTitle("Editar reserva de \(selectedReserve.remitenteNombre)")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             if isThereAlmostOneRoseSelected && areEssentialFieldsCompleted && !includePhotoAndMessage {

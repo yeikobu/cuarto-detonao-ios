@@ -169,8 +169,8 @@ struct ReserveView: View {
                             Label("Pagar", systemImage: "creditcard")
                         }
                         
-                        Button {
-                            //
+                        NavigationLink {
+                            UpdateReserveView(selectedReserve: reserveModel)
                         } label: {
                             Label("Editar", systemImage: "pencil.and.list.clipboard")
                         }
