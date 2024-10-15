@@ -17,6 +17,7 @@ class ReservesViewModel {
     func fetchReserves() async {
         do {
             reserves = try await reserveService.fetchReserves()
+            reserves = reserves.sorted(by: { $0.id < $1.id })
         } catch {
             showrError = true
             errorMessage = "Error al obtener los datos de la API"
