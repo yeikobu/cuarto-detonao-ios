@@ -133,8 +133,9 @@ struct ReserveView: View {
                             AsyncImage(url: URL(string: foto)) { image in
                                 image.image?
                                     .resizable()
-                                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                                    .scaledToFill()
                                     .frame(width: 250, height: 250)
+                                    .clipShape(RoundedRectangle(cornerRadius: 12))
                                     .clipped()
                             }
                         }

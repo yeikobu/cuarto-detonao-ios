@@ -260,8 +260,9 @@ struct NewReserveView: View {
                             if let uiImage = image {
                                 Image(uiImage: uiImage)
                                     .resizable()
-                                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                                    .scaledToFill()
                                     .frame(width: 250, height: 250)
+                                    .clipShape(RoundedRectangle(cornerRadius: 12))
                                     .clipped()
                             }
                         }
