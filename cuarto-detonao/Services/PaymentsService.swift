@@ -22,14 +22,15 @@ final class PaymentsService {
         return payments
     }
     
-    func createPayment(paymentModel: PaymentModel) async throws -> NewPaymentResponse? {
+    func createPayment(paymentModel: CreatePaymentModel) async throws -> NewPaymentResponse? {
         guard let paymentsURL = URL(string: "\(baseURL)/payment") else { return nil}
         
         var request = URLRequest(url: paymentsURL)
         request.httpMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         
-        let _ = try JSONEncoder().encode(paymentModel)
+        let jsonData = try JSONEncoder().encode(paymentModel)
+        request.httpBody = jsonData
         
         let (data, response) = try await URLSession.shared.data(for: request)
         

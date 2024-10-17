@@ -8,16 +8,19 @@
 import SwiftUI
 
 struct CreatePaymentView: View {
+    @Environment(NewPaymentViewModel.self) var newPaymentViewModel
     
-    var reserve: ReserveModel
+    @Binding var reserve: ReserveModel
     @State private var paymentMethod: String = ""
     @Binding var showCreatingPaymentMessage: Bool
+    @Binding var newPaymentResponse: NewPaymentResponse
     
     var body: some View {
         NavigationStack {
             VStack(spacing: 20) {
                 VStack {
                     Text("Confirma el pago para la reserva de")
+                        .font(.footnote)
                         .foregroundStyle(.secondary)
                     
                     Text("\(reserve.remitenteNombre) \(reserve.remitenteApellido)")
@@ -28,6 +31,7 @@ struct CreatePaymentView: View {
                 
                 VStack {
                     Text("Monto a pagar")
+                        .font(.footnote)
                         .foregroundStyle(.secondary)
                     
                     Text("\(reserve.totalAPagar)")
@@ -37,6 +41,7 @@ struct CreatePaymentView: View {
                 
                 VStack {
                     Text("Método de pago")
+                        .font(.footnote)
                         .foregroundStyle(.secondary)
                     
                     HStack(spacing: 10) {
@@ -79,21 +84,32 @@ struct CreatePaymentView: View {
                         Button("Crear pago") {
                             Task {
                                 showCreatingPaymentMessage = true
+                                let paymentData = CreatePaymentModel(reservaID: reserve.id, metodoPago: paymentMethod, monto: reserve.totalAPagar, estado: "No entregado")
                                 
+                                if let paymentResponse = await newPaymentViewModel.createNewPayment(paymentModel: paymentData) {
+                                    newPaymentResponse = paymentResponse
+                                }
+                                
+                                showCreatingPaymentMessage = false
                                 
                             }
                         }
-                        .buttonStyle(BorderedProminentButtonStyle())
                     }
                 }
             }
             .padding(.horizontal, 20)
+            .padding(.bottom, 10)
             .navigationTitle("Confirmar pago")
             .navigationBarTitleDisplayMode(.inline)
+            .overlay {
+                if showCreatingPaymentMessage {
+                    WaitingAlertView(message: "Creando pago...")
+                }
+            }
         }
     }
 }
 
 #Preview {
-    CreatePaymentView(reserve: ReserveModel(id: 1, remitenteNombre: "Jacob", remitenteApellido: "Aguilar", remitentePseudonimo: "Yeikobu", remitenteCurso: "Primero Medio C", remitenteAnonimo: false, destinatarioNombre: "Melany", destinatarioApellido: "Torres", destinatarioPseudonimo: "mimi", destinatarioCurso: "Primero Medio D", totalAPagar: 2000, dedicatoria: nil, fotoURL: nil, createdAt: "2024-10-06T15:46:15.135Z", detalles: [Detalle(colorNombre: "Roja", cantidad: 1)]), showCreatingPaymentMessage: .constant(false))
+    CreatePaymentView(reserve: .constant(ReserveModel(id: 1, remitenteNombre: "Jacob", remitenteApellido: "Aguilar", remitentePseudonimo: "Yeikobu", remitenteCurso: "Primero Medio C", remitenteAnonimo: false, destinatarioNombre: "Melany", destinatarioApellido: "Torres", destinatarioPseudonimo: "mimi", destinatarioCurso: "Primero Medio D", totalAPagar: 2000, dedicatoria: nil, fotoURL: nil, createdAt: "2024-10-06T15:46:15.135Z", detalles: [Detalle(colorNombre: "Roja", cantidad: 1)])), showCreatingPaymentMessage: .constant(false), newPaymentResponse: .constant(NewPaymentResponse(message: "Reserva creada con éxito", paymentID: 0)))
 }

@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ReservesView: View {
     @State private var viewModel = ReservesViewModel()
+    @State private var newPaymentViewModel = NewPaymentViewModel()
     @State private var fetchingData = false
     
     // Estados para borrar reserva
@@ -22,8 +23,12 @@ struct ReservesView: View {
     
     @State private var newReserve = false
     
+    // Estados para los págos
     @State private var showCreatePaymentView = false
     @State private var showCreatingPaymentMessage = false
+    @State private var selectedReserveToPay: ReserveModel = ReserveModel(id: 0, remitenteNombre: "", remitenteApellido: "", remitentePseudonimo: "", remitenteCurso: "", remitenteAnonimo: false, destinatarioNombre: "", destinatarioApellido: "", destinatarioPseudonimo: "", destinatarioCurso: "", totalAPagar: 0, dedicatoria: "", fotoURL: "", createdAt: "", detalles: [])
+    @State private var newPaymentResponse: NewPaymentResponse = NewPaymentResponse(message: "", paymentID: 0)
+    @State private var isPaymentCreated = false
     
     var searchResults: [ReserveModel] {
         get {
@@ -55,6 +60,7 @@ struct ReservesView: View {
                         }
                         .contextMenu {
                             Button {
+                                selectedReserveToPay = reserve
                                 showCreatePaymentView = true
                             } label: {
                                 Label("Pagar", systemImage: "creditcard")
@@ -80,11 +86,6 @@ struct ReservesView: View {
                             } label: {
                                 Label("Eliminar", systemImage: "trash")
                             }
-                        }
-                        .sheet(isPresented: $showCreatePaymentView) {
-                            CreatePaymentView(reserve: reserve, showCreatingPaymentMessage: $showCreatingPaymentMessage)
-                                .presentationDetents([.height(350)])
-                                .presentationDragIndicator(.visible)
                         }
                         .alert(isPresented: $showDeleteWarning) {
                             Alert(
@@ -117,6 +118,12 @@ struct ReservesView: View {
                     }
                 }
                 .searchable(text: $searchedText, prompt: "Busca por id, nombre o apellido") {}
+                .sheet(isPresented: $showCreatePaymentView) {
+                    CreatePaymentView(reserve: $selectedReserveToPay, showCreatingPaymentMessage: $showCreatingPaymentMessage, newPaymentResponse: $newPaymentResponse)
+                        .presentationDetents([.height(350)])
+                        .presentationDragIndicator(.visible)
+                        .environment(newPaymentViewModel)
+                }
                 .overlay {
                     if deletingData {
                         WaitingAlertView(message: "Eliminando Reserva...")
@@ -132,6 +139,9 @@ struct ReservesView: View {
         }
         .alert("Reserva eliminada exitosamente", isPresented: $isReserveDeleted) {
             Button("Aceptar") {}
+        }
+        .alert("\(newPaymentResponse.message)", isPresented: $newPaymentViewModel.isPaymentCreated) {
+            Button("Aceptar") { }
         }
         .task {
             fetchingData = true
