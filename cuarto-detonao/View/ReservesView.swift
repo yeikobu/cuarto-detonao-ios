@@ -22,6 +22,9 @@ struct ReservesView: View {
     
     @State private var newReserve = false
     
+    @State private var showCreatePaymentView = false
+    @State private var showCreatingPaymentMessage = false
+    
     var searchResults: [ReserveModel] {
         get {
             if searchedText.isEmpty {
@@ -52,7 +55,7 @@ struct ReservesView: View {
                         }
                         .contextMenu {
                             Button {
-                                //
+                                showCreatePaymentView = true
                             } label: {
                                 Label("Pagar", systemImage: "creditcard")
                             }
@@ -77,6 +80,11 @@ struct ReservesView: View {
                             } label: {
                                 Label("Eliminar", systemImage: "trash")
                             }
+                        }
+                        .sheet(isPresented: $showCreatePaymentView) {
+                            CreatePaymentView(reserve: reserve, showCreatingPaymentMessage: $showCreatingPaymentMessage)
+                                .presentationDetents([.height(350)])
+                                .presentationDragIndicator(.visible)
                         }
                         .alert(isPresented: $showDeleteWarning) {
                             Alert(
