@@ -10,17 +10,17 @@ final class ReservesService {
     
     private let baseURL: String = "https://cuarto-detonao-backend.onrender.com"
     
-    func fetchReserves() async throws -> [ReserveModel] {
-        guard let reservesURL = URL(string: "\(baseURL)/reserves") else { return [] }
-        
-        let request = URLRequest(url: reservesURL)
-        
-        let (data, _) = try await URLSession.shared.data(for: request)
-        
-        let reserves = try JSONDecoder().decode([ReserveModel].self, from: data)
-        
-        return reserves
-    }
+//    func fetchReserves() async throws -> [ReserveModel] {
+//        guard let reservesURL = URL(string: "\(baseURL)/reserves") else { return [] }
+//        
+//        let request = URLRequest(url: reservesURL)
+//        
+//        let (data, _) = try await URLSession.shared.data(for: request)
+//        
+//        let reserves = try JSONDecoder().decode([ReserveModel].self, from: data)
+//        
+//        return reserves
+//    }
     
     func createNewReserve(reserveData: NewReserveModel) async throws -> NewReserveResponse? {
         guard let newReserveURL = URL(string: "\(baseURL)/reserve") else { return nil }

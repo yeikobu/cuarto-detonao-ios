@@ -11,7 +11,7 @@ import PhotosUI
 struct UpdateReserveView: View {
     @Environment(\.dismiss) var dismiss
     
-    var selectedReserve: ReserveModel
+    var selectedReserve: ReserveWithPaymentModel
     @State private var updateReserveViewModel = UpdateReserveViewModel()
     @State private var reserveToUpdate = NewReserveModel(remitenteNombre: "", remitenteApellido: "", remitentePseudonimo: "", remitenteCurso: "", remitenteAnonimo: false, destinatarioNombre: "", destinatarioApellido: "", destinatarioPseudonimo: "", destinatarioCurso: "", totalAPagar: 0, dedicatoria: "", fotoURL: "", detalles: [])
     
@@ -440,6 +440,6 @@ struct UpdateReserveView: View {
     }
 }
 
-#Preview {
-    UpdateReserveView(selectedReserve: ReserveModel(id: 20, remitenteNombre: "Marcelo", remitenteApellido: "Agacháte", remitentePseudonimo: "Conocélo", remitenteCurso: "Cuarto Medio A", remitenteAnonimo: false, destinatarioNombre: "Luis", destinatarioApellido: "Contreras", destinatarioPseudonimo: "", destinatarioCurso: "Cuarto Medio B", totalAPagar: 400, dedicatoria: "Para alguien muy especial", fotoURL: "https://firebasestorage.googleapis.com/v0/b/cuarto-detonao.appspot.com/o/fotos%2FfromMarceloAgachate-toLuisContreras-atWed%20Oct%2009%202024%2018%3A04%3A38%20GMT-0300%20(Chile%20Summer%20Time).jpg?alt=media&token=4c331946-cf60-4e6e-b9f0-30841fa78eb2", createdAt: "2024-10-09T21:04:42.180Z", detalles: [Detalle(colorNombre: "Roja", cantidad: 2)]))
-}
+//#Preview {
+//    UpdateReserveView(selectedReserve: ReserveModel(id: 20, remitenteNombre: "Marcelo", remitenteApellido: "Agacháte", remitentePseudonimo: "Conocélo", remitenteCurso: "Cuarto Medio A", remitenteAnonimo: false, destinatarioNombre: "Luis", destinatarioApellido: "Contreras", destinatarioPseudonimo: "", destinatarioCurso: "Cuarto Medio B", totalAPagar: 400, dedicatoria: "Para alguien muy especial", fotoURL: "https://firebasestorage.googleapis.com/v0/b/cuarto-detonao.appspot.com/o/fotos%2FfromMarceloAgachate-toLuisContreras-atWed%20Oct%2009%202024%2018%3A04%3A38%20GMT-0300%20(Chile%20Summer%20Time).jpg?alt=media&token=4c331946-cf60-4e6e-b9f0-30841fa78eb2", createdAt: "2024-10-09T21:04:42.180Z", detalles: [Detalle(colorNombre: "Roja", cantidad: 2)]))
+//}

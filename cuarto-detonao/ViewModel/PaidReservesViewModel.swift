@@ -1,26 +1,29 @@
 //
-//  ReservesViewModel.swift
+//  PaidReservesViewModel.swift
 //  cuarto-detonao
 //
-//  Created by Jacob Aguilar on 07-10-24.
+//  Created by Jacob Aguilar on 17-10-24.
 //
 
 import Foundation
 
 @Observable
-class ReservesViewModel {
+class PaidReservesViewModel {
+    private let paymentsService = PaymentsService()
     private let reserveService: ReservesService = ReservesService()
-    var reserves: [ReserveModel] = []
-    var showrError: Bool = false
-    var errorMessage: String = ""
     
-    func fetchReserves() async {
+    var reserves: [ReserveWithPaymentModel] = []
+    var showError = false
+    var errorMessage = ""
+    
+    func getReservesWithPaymentsInfo() async  {
         do {
-            reserves = try await reserveService.fetchReserves()
+            reserves = try await paymentsService.fetchPayments()
             reserves = reserves.sorted(by: { $0.id < $1.id })
         } catch {
-            showrError = true
+            showError = true
             errorMessage = "Error al obtener los datos de la API"
+            print("Error: \(error)")
         }
     }
     

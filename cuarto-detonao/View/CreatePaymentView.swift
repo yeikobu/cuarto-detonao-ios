@@ -10,7 +10,7 @@ import SwiftUI
 struct CreatePaymentView: View {
     @Environment(NewPaymentViewModel.self) var newPaymentViewModel
     
-    @Binding var reserve: ReserveModel
+    @Binding var reserve: ReserveWithPaymentModel
     @State private var paymentMethod: String = ""
     @Binding var showCreatingPaymentMessage: Bool
     @Binding var newPaymentResponse: NewPaymentResponse
@@ -111,5 +111,5 @@ struct CreatePaymentView: View {
 }
 
 #Preview {
-    CreatePaymentView(reserve: .constant(ReserveModel(id: 1, remitenteNombre: "Jacob", remitenteApellido: "Aguilar", remitentePseudonimo: "Yeikobu", remitenteCurso: "Primero Medio C", remitenteAnonimo: false, destinatarioNombre: "Melany", destinatarioApellido: "Torres", destinatarioPseudonimo: "mimi", destinatarioCurso: "Primero Medio D", totalAPagar: 2000, dedicatoria: nil, fotoURL: nil, createdAt: "2024-10-06T15:46:15.135Z", detalles: [Detalle(colorNombre: "Roja", cantidad: 1)])), showCreatingPaymentMessage: .constant(false), newPaymentResponse: .constant(NewPaymentResponse(message: "Reserva creada con éxito", paymentID: 0)))
+    CreatePaymentView(reserve: .constant(ReserveWithPaymentModel(id: 0, remitenteNombre: "", remitenteApellido: "", remitentePseudonimo: "", remitenteCurso: "", remitenteAnonimo: false, destinatarioNombre: "", destinatarioApellido: "", destinatarioPseudonimo: "", destinatarioCurso: "", totalAPagar: 0, dedicatoria: "", fotoURL: "", createdAt: "", pago: PaymentModel(id: 0, reservaID: 0, metodoPago: "", monto: 0, estado: "", fechaPago: ""), detalles: [])), showCreatingPaymentMessage: .constant(false), newPaymentResponse: .constant(NewPaymentResponse(message: "Reserva creada con éxito", paymentID: 0)))
 }

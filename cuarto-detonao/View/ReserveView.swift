@@ -9,10 +9,10 @@ import SwiftUI
 
 struct ReserveView: View {
     
-    var reserveModel: ReserveModel
+    var reserveModel: ReserveWithPaymentModel
     
     @State private var reserveViewModel = ReserveViewModel()
-    @State private var reservesViewModel = ReservesViewModel()
+    @State private var reservesViewModel = PaidReservesViewModel()
     @State private var date = ""
     
     @State private var showDeleteWarning = false
@@ -219,6 +219,6 @@ struct ReserveView: View {
     }
 }
 
-#Preview {
-    ReserveView(reserveModel: ReserveModel(id: 1, remitenteNombre: "Jacob", remitenteApellido: "Aguilar", remitentePseudonimo: "Yeikobu", remitenteCurso: "Primero Medio C", remitenteAnonimo: false, destinatarioNombre: "Melany", destinatarioApellido: "Torres", destinatarioPseudonimo: "mimi", destinatarioCurso: "Primero Medio D", totalAPagar: 2000, dedicatoria: nil, fotoURL: nil, createdAt: "2024-10-06T15:46:15.135Z", detalles: [Detalle(colorNombre: "Roja", cantidad: 1)]))
-}
+//#Preview {
+//    ReserveView(reserveModel: ReserveModel(id: 1, remitenteNombre: "Jacob", remitenteApellido: "Aguilar", remitentePseudonimo: "Yeikobu", remitenteCurso: "Primero Medio C", remitenteAnonimo: false, destinatarioNombre: "Melany", destinatarioApellido: "Torres", destinatarioPseudonimo: "mimi", destinatarioCurso: "Primero Medio D", totalAPagar: 2000, dedicatoria: nil, fotoURL: nil, createdAt: "2024-10-06T15:46:15.135Z", detalles: [Detalle(colorNombre: "Roja", cantidad: 1)]))
+//}

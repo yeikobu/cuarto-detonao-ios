@@ -15,7 +15,7 @@ struct ReserveWithPaymentModel: Codable {
     let totalAPagar: Int
     let dedicatoria, fotoURL: String?
     let createdAt: String
-    let pago: PaymentModel
+    let pago: PaymentModel?
     let detalles: [Detalle]
 
     enum CodingKeys: String, CodingKey {
@@ -37,13 +37,24 @@ struct ReserveWithPaymentModel: Codable {
     }
 }
 
+struct Detalle: Codable, Hashable {
+    let colorNombre: String
+    let cantidad: Int
+
+    enum CodingKeys: String, CodingKey {
+        case colorNombre = "color_nombre"
+        case cantidad
+    }
+}
+
+
 struct PaymentModel: Codable {
     let id: Int
-    let reservaID: Int
+    let reservaID: Int?
     let metodoPago: String
     let monto: Int
     let estado: String
-    let fechaPago: String
+    let fechaPago: String?
 
     enum CodingKeys: String, CodingKey {
         case id

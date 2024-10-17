@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ReservesView: View {
-    @State private var viewModel = ReservesViewModel()
+    @State private var viewModel = PaidReservesViewModel()
     @State private var newPaymentViewModel = NewPaymentViewModel()
     @State private var fetchingData = false
     
@@ -16,7 +16,7 @@ struct ReservesView: View {
     @State private var showDeleteWarning = false
     @State private var deletingData = false
     @State private var isReserveDeleted = false
-    @State private var reserveToDelete: ReserveModel?
+    @State private var reserveToDelete: ReserveWithPaymentModel?
     
     // Estado de la búsqueda de una reserva
     @State private var searchedText = ""
@@ -26,11 +26,11 @@ struct ReservesView: View {
     // Estados para los págos
     @State private var showCreatePaymentView = false
     @State private var showCreatingPaymentMessage = false
-    @State private var selectedReserveToPay: ReserveModel = ReserveModel(id: 0, remitenteNombre: "", remitenteApellido: "", remitentePseudonimo: "", remitenteCurso: "", remitenteAnonimo: false, destinatarioNombre: "", destinatarioApellido: "", destinatarioPseudonimo: "", destinatarioCurso: "", totalAPagar: 0, dedicatoria: "", fotoURL: "", createdAt: "", detalles: [])
+    @State private var selectedReserveToPay: ReserveWithPaymentModel = ReserveWithPaymentModel(id: 0, remitenteNombre: "", remitenteApellido: "", remitentePseudonimo: "", remitenteCurso: "", remitenteAnonimo: false, destinatarioNombre: "", destinatarioApellido: "", destinatarioPseudonimo: "", destinatarioCurso: "", totalAPagar: 0, dedicatoria: "", fotoURL: "", createdAt: "", pago: PaymentModel(id: 0, reservaID: 0, metodoPago: "", monto: 0, estado: "", fechaPago: ""), detalles: [])
     @State private var newPaymentResponse: NewPaymentResponse = NewPaymentResponse(message: "", paymentID: 0)
     @State private var isPaymentCreated = false
     
-    var searchResults: [ReserveModel] {
+    var searchResults: [ReserveWithPaymentModel] {
         get {
             if searchedText.isEmpty {
                 return viewModel.reserves
@@ -81,8 +81,8 @@ struct ReservesView: View {
                             Divider()
                             
                             Button(role: .destructive) {
-                                reserveToDelete = reserve // Asigna la reserva seleccionada
-                                showDeleteWarning = true  // Muestra la alerta
+                                reserveToDelete = reserve
+                                showDeleteWarning = true
                             } label: {
                                 Label("Eliminar", systemImage: "trash")
                             }
@@ -114,7 +114,7 @@ struct ReservesView: View {
                 }
                 .refreshable {
                     Task {
-                        await viewModel.fetchReserves()
+                        await viewModel.getReservesWithPaymentsInfo()
                     }
                 }
                 .searchable(text: $searchedText, prompt: "Busca por id, nombre o apellido") {}
@@ -145,7 +145,7 @@ struct ReservesView: View {
         }
         .task {
             fetchingData = true
-            await viewModel.fetchReserves()
+            await viewModel.getReservesWithPaymentsInfo()
             fetchingData = false
         }
         .toolbar {

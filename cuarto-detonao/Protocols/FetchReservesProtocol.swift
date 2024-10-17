@@ -7,6 +7,6 @@
 
 import Foundation
 
-protocol FetchReservesProtocol {
-    func fectchReserves() async throws -> [ReserveModel]
-}
+//protocol FetchReservesProtocol {
+//    func fectchReserves() async throws -> [ReserveModel]
+//}
