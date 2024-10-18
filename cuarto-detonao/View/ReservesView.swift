@@ -31,11 +31,27 @@ struct ReservesView: View {
     @State private var isPaymentCreated = false
     
     var searchResults: [ReserveWithPaymentModel] {
-        get {
-            if searchedText.isEmpty {
-                return viewModel.reserves
-            } else {
-                return viewModel.reserves.filter { $0.remitenteNombre.contains(searchedText) || $0.remitenteApellido.contains(searchedText) || $0.id == Int(searchedText) }
+        let filteredReserves: [ReserveWithPaymentModel]
+            
+        // Aplicar el filtro seleccionado
+        switch selectedFiler {
+        case .todas:
+            filteredReserves = viewModel.reserves
+        case .pagadas:
+            filteredReserves = viewModel.reserves.filter { $0.pago != nil }
+        case .entregadas:
+            filteredReserves = viewModel.reserves.filter { $0.pago?.estado == "Entregado" }
+        case .nonDeliveried:
+            filteredReserves = viewModel.reserves.filter { $0.pago?.estado != "Entregado" || $0.pago == nil }
+        }
+        
+        if searchedText.isEmpty {
+            return filteredReserves
+        } else {
+            return filteredReserves.filter {
+                $0.remitenteNombre.contains(searchedText) ||
+                $0.remitenteApellido.contains(searchedText) ||
+                String($0.id).contains(searchedText)
             }
         }
     }
