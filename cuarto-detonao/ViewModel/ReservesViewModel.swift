@@ -8,7 +8,7 @@
 import Foundation
 
 @Observable
-class PaidReservesViewModel {
+class ReservesViewModel {
     private let paymentsService = PaymentsService()
     private let reserveService: ReservesService = ReservesService()
     
@@ -37,5 +37,9 @@ class PaidReservesViewModel {
             print(error)
             return false
         }
+    }
+    
+    func getReservesWithPayments(reserves: [ReserveWithPaymentModel]) -> [ReserveWithPaymentModel] {
+        return reserves.filter { $0.pago != nil }
     }
 }

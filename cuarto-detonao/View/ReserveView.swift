@@ -12,7 +12,7 @@ struct ReserveView: View {
     var reserveModel: ReserveWithPaymentModel
     
     @State private var reserveViewModel = ReserveViewModel()
-    @State private var reservesViewModel = PaidReservesViewModel()
+    @State private var reservesViewModel = ReservesViewModel()
     @State private var date = ""
     
     @State private var showDeleteWarning = false

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ReservesView: View {
-    @State private var viewModel = PaidReservesViewModel()
+    @State private var viewModel = ReservesViewModel()
     @State private var newPaymentViewModel = NewPaymentViewModel()
     @State private var fetchingData = false
     
@@ -40,6 +40,15 @@ struct ReservesView: View {
         }
     }
     
+    
+    enum Filter: String, CaseIterable, Identifiable {
+        case todas, pagadas, entregadas
+        case nonDeliveried = "No entregadas"
+        var id: Self { self }
+    }
+    
+    @State private var selectedFiler: Filter = .todas
+    
     var body: some View {
         NavigationStack {
             if fetchingData {
@@ -50,6 +59,14 @@ struct ReservesView: View {
                         .scaleEffect(1.4)
                 }
             } else {
+                Picker("Filtros", selection: $selectedFiler) {
+                    ForEach(Filter.allCases) { filter in
+                        Text(filter.rawValue.capitalized)
+                    }
+                }
+                .pickerStyle(.segmented)
+                .padding(.horizontal, 10)
+                
                 List(searchResults, id: \.id) { reserve in
                     NavigationLink(destination: ReserveView(reserveModel: reserve)) {
                         HStack(spacing: 30) {
@@ -112,6 +129,7 @@ struct ReservesView: View {
                         }
                     }
                 }
+                .listStyle(.inset)
                 .refreshable {
                     Task {
                         await viewModel.getReservesWithPaymentsInfo()
