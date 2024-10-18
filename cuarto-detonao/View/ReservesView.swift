@@ -165,7 +165,7 @@ struct ReservesView: View {
                         await viewModel.getReservesWithPaymentsInfo()
                     }
                 }
-                .searchable(text: $searchedText, prompt: "Busca por id, nombre o apellido") {}
+                .searchable(text: $searchedText, prompt: "Número reserva, nombre o apellido") {}
                 .sheet(isPresented: $showCreatePaymentView) {
                     CreatePaymentView(reserve: $selectedReserveToPay, showCreatingPaymentMessage: $showCreatingPaymentMessage, newPaymentResponse: $newPaymentResponse)
                         .presentationDetents([.height(350)])
