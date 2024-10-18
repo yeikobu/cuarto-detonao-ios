@@ -159,7 +159,6 @@ struct ReservesView: View {
                         }
                     }
                 }
-                .listStyle(.inset)
                 .refreshable {
                     Task {
                         await viewModel.getReservesWithPaymentsInfo()
