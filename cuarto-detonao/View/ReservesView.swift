@@ -30,6 +30,8 @@ struct ReservesView: View {
     @State private var newPaymentResponse: NewPaymentResponse = NewPaymentResponse(message: "", paymentID: 0)
     @State private var isPaymentCreated = false
     
+    @State private var viewTitle = "Reservas totales"
+    
     var searchResults: [ReserveWithPaymentModel] {
         let filteredReserves: [ReserveWithPaymentModel]
             
@@ -42,7 +44,7 @@ struct ReservesView: View {
         case .entregadas:
             filteredReserves = viewModel.reserves.filter { $0.pago?.estado == "Entregado" }
         case .nonDeliveried:
-            filteredReserves = viewModel.reserves.filter { $0.pago?.estado != "Entregado" || $0.pago == nil }
+            filteredReserves = viewModel.reserves.filter { $0.pago?.estado != "No entregado" || $0.pago == nil }
         }
         
         if searchedText.isEmpty {
@@ -82,6 +84,18 @@ struct ReservesView: View {
                 }
                 .pickerStyle(.segmented)
                 .padding(.horizontal, 10)
+                .onChange(of: selectedFiler) {
+                    switch selectedFiler {
+                    case .todas:
+                        viewTitle = "Reservas totales"
+                    case .pagadas:
+                        viewTitle = "Reservas pagadas"
+                    case .entregadas:
+                        viewTitle = "Pedidos entregados"
+                    case .nonDeliveried:
+                        viewTitle = "Pedidos no entregados"
+                    }
+                }
                 
                 List(searchResults, id: \.id) { reserve in
                     NavigationLink(destination: ReserveView(reserveModel: reserve)) {
@@ -165,7 +179,7 @@ struct ReservesView: View {
                 }
             }
         }
-        .navigationTitle("\(viewModel.reserves.count) Reservas")
+        .navigationTitle("\(searchResults.count) \(viewTitle)")
         .sheet(isPresented: $newReserve) {
             NavigationStack {
                 NewReserveView()
