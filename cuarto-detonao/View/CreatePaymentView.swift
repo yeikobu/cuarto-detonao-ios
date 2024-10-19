@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CreatePaymentView: View {
-    @Environment(NewPaymentViewModel.self) var newPaymentViewModel
+    @Environment(PaymentsViewModel.self) var paymentsViewModel
     
     @Binding var reserve: ReserveWithPaymentModel
     @State private var paymentMethod: String = ""
@@ -86,7 +86,7 @@ struct CreatePaymentView: View {
                                 showCreatingPaymentMessage = true
                                 let paymentData = CreatePaymentModel(reservaID: reserve.id, metodoPago: paymentMethod, monto: reserve.totalAPagar, estado: "No entregado")
                                 
-                                if let paymentResponse = await newPaymentViewModel.createNewPayment(paymentModel: paymentData) {
+                                if let paymentResponse = await paymentsViewModel.createNewPayment(paymentModel: paymentData) {
                                     newPaymentResponse = paymentResponse
                                 }
                                 

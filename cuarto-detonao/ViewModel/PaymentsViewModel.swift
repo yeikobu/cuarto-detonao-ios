@@ -8,7 +8,7 @@
 import Foundation
 
 @Observable
-class NewPaymentViewModel {
+class PaymentsViewModel {
     private let paymentsService = PaymentsService()
     var isPaymentCreated = false
     var showrError: Bool = false
@@ -29,5 +29,18 @@ class NewPaymentViewModel {
         }
         
         return newPaymentRespose
+    }
+    
+    @MainActor
+    func deletePaymentByID(id: Int) async -> Bool {
+        do {
+            return try await paymentsService.deletePayment(id: id)
+        } catch {
+            showrError = true
+            errorMessage = "No se pudo eliminar el pago"
+            print("Error: \(error)")
+        }
+        
+        return false
     }
 }

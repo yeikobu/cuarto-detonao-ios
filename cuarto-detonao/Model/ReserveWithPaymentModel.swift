@@ -8,15 +8,15 @@
 import Foundation
 
 struct ReserveWithPaymentModel: Codable {
-    let id: Int
-    let remitenteNombre, remitenteApellido, remitentePseudonimo, remitenteCurso: String
-    let remitenteAnonimo: Bool
-    let destinatarioNombre, destinatarioApellido, destinatarioPseudonimo, destinatarioCurso: String
-    let totalAPagar: Int
-    let dedicatoria, fotoURL: String?
-    let createdAt: String
-    let pago: PaymentModel?
-    let detalles: [Detalle]
+    var id: Int
+    var remitenteNombre, remitenteApellido, remitentePseudonimo, remitenteCurso: String
+    var remitenteAnonimo: Bool
+    var destinatarioNombre, destinatarioApellido, destinatarioPseudonimo, destinatarioCurso: String
+    var totalAPagar: Int
+    var dedicatoria, fotoURL: String?
+    var createdAt: String
+    var pago: PaymentModel?
+    var detalles: [Detalle]
 
     enum CodingKeys: String, CodingKey {
         case id

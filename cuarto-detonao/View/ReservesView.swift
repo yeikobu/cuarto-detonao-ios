@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ReservesView: View {
     @State private var viewModel = ReservesViewModel()
-    @State private var newPaymentViewModel = NewPaymentViewModel()
+    @State private var paymentsViewModel = PaymentsViewModel()
     @State private var fetchingData = false
     
     // Estados para borrar reserva
@@ -29,6 +29,9 @@ struct ReservesView: View {
     @State private var selectedReserveToPay: ReserveWithPaymentModel = ReserveWithPaymentModel(id: 0, remitenteNombre: "", remitenteApellido: "", remitentePseudonimo: "", remitenteCurso: "", remitenteAnonimo: false, destinatarioNombre: "", destinatarioApellido: "", destinatarioPseudonimo: "", destinatarioCurso: "", totalAPagar: 0, dedicatoria: "", fotoURL: "", createdAt: "", pago: PaymentModel(id: 0, reservaID: 0, metodoPago: "", monto: 0, estado: "", fechaPago: ""), detalles: [])
     @State private var newPaymentResponse: NewPaymentResponse = NewPaymentResponse(message: "", paymentID: 0)
     @State private var isPaymentCreated = false
+    @State private var paymentToDelete: ReserveWithPaymentModel?
+    @State private var showDeletePaymentWarning = false
+    @State private var isPaymentDeleted = false
     
     @State private var viewTitle = "Reservas totales"
     
@@ -131,8 +134,8 @@ struct ReservesView: View {
                             
                             if reserve.pago != nil {
                                 Button(role: .destructive) {
-                                    reserveToDelete = reserve
-                                    showDeleteWarning = true
+                                    paymentToDelete = reserve
+                                    showDeletePaymentWarning = true
                                 } label: {
                                     Label("Eliminar pago", systemImage: "creditcard")
                                 }
@@ -168,6 +171,33 @@ struct ReservesView: View {
                                 }
                             )
                         }
+                        .alert(isPresented: $showDeletePaymentWarning) {
+                            Alert(
+                                title: Text("¿Quieres eliminar el pago de \(paymentToDelete?.remitenteNombre ?? "")?"),
+                                primaryButton: .destructive(Text("Eliminar")) {
+                                    Task {
+                                        if let reserve = paymentToDelete {
+                                            if let pago = reserve.pago {
+                                                print(pago.id)
+                                                deletingData = true
+                                                isPaymentDeleted = await paymentsViewModel.deletePaymentByID(id: pago.id)
+                                                print(isPaymentDeleted)
+                                                if isPaymentDeleted {
+                                                    if let index = viewModel.reserves.firstIndex(where: { $0.id == reserve.id }) {
+                                                        viewModel.reserves[index].pago = nil
+                                                    }
+                                                }
+                                                deletingData = false
+                                                paymentToDelete = nil
+                                            }
+                                        }
+                                    }
+                                },
+                                secondaryButton: .cancel(Text("Cancelar")) {
+                                    reserveToDelete = nil // Resetear la reserva seleccionada si se cancela
+                                }
+                            )
+                        }
                     }
                 }
                 .refreshable {
@@ -180,7 +210,7 @@ struct ReservesView: View {
                     CreatePaymentView(reserve: $selectedReserveToPay, showCreatingPaymentMessage: $showCreatingPaymentMessage, newPaymentResponse: $newPaymentResponse)
                         .presentationDetents([.height(350)])
                         .presentationDragIndicator(.visible)
-                        .environment(newPaymentViewModel)
+                        .environment(paymentsViewModel)
                 }
                 .overlay {
                     if deletingData {
@@ -198,7 +228,7 @@ struct ReservesView: View {
         .alert("Reserva eliminada exitosamente", isPresented: $isReserveDeleted) {
             Button("Aceptar") {}
         }
-        .alert("\(newPaymentResponse.message)", isPresented: $newPaymentViewModel.isPaymentCreated) {
+        .alert("\(newPaymentResponse.message)", isPresented: $paymentsViewModel.isPaymentCreated) {
             Button("Aceptar") { }
         }
         .task {

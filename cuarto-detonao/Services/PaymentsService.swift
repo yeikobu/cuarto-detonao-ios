@@ -43,7 +43,15 @@ final class PaymentsService {
         return paymentResponse
     }
     
-    func deletePayment() async throws {
+    func deletePayment(id: Int) async throws -> Bool {
+        guard let url = URL(string: "\(baseURL)/payment/\(id)") else { return false }
         
+        var request = URLRequest(url: url)
+        request.httpMethod = "DELETE"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let (_, _) = try await URLSession.shared.data(for: request)
+        
+        return true
     }
 }
