@@ -88,6 +88,8 @@ struct CreatePaymentView: View {
                                 
                                 if let paymentResponse = await paymentsViewModel.createNewPayment(paymentModel: paymentData) {
                                     newPaymentResponse = paymentResponse
+                                    
+                                    reserve.pago = PaymentModel(id: paymentResponse.paymentID, reservaID: reserve.id, metodoPago: paymentData.metodoPago, monto: paymentData.monto, estado: paymentData.estado, fechaPago: nil)
                                 }
                                 
                                 showCreatingPaymentMessage = false

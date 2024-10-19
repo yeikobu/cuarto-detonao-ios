@@ -211,6 +211,14 @@ struct ReservesView: View {
                         .presentationDetents([.height(350)])
                         .presentationDragIndicator(.visible)
                         .environment(paymentsViewModel)
+                        .onDisappear {
+                            if let pago = selectedReserveToPay.pago {
+                                if let reserveToReplaceIndex = viewModel.reserves.firstIndex(where: { $0.id == selectedReserveToPay.id }) {
+                                    print(reserveToReplaceIndex)
+                                    viewModel.reserves[reserveToReplaceIndex].pago = pago
+                                }
+                            }
+                        }
                 }
                 .overlay {
                     if deletingData {
