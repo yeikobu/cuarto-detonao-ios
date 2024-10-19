@@ -106,11 +106,13 @@ struct ReservesView: View {
                             Text("$\(reserve.totalAPagar)")
                         }
                         .contextMenu {
-                            Button {
-                                selectedReserveToPay = reserve
-                                showCreatePaymentView = true
-                            } label: {
-                                Label("Pagar", systemImage: "creditcard")
+                            if reserve.pago == nil {
+                                Button {
+                                    selectedReserveToPay = reserve
+                                    showCreatePaymentView = true
+                                } label: {
+                                    Label("Pagar", systemImage: "creditcard")
+                                }
                             }
                             
                             NavigationLink {
@@ -127,11 +129,20 @@ struct ReservesView: View {
                             
                             Divider()
                             
+                            if reserve.pago != nil {
+                                Button(role: .destructive) {
+                                    reserveToDelete = reserve
+                                    showDeleteWarning = true
+                                } label: {
+                                    Label("Eliminar pago", systemImage: "creditcard")
+                                }
+                            }
+                            
                             Button(role: .destructive) {
                                 reserveToDelete = reserve
                                 showDeleteWarning = true
                             } label: {
-                                Label("Eliminar", systemImage: "trash")
+                                Label("Eliminar Reserva", systemImage: "trash")
                             }
                         }
                         .alert(isPresented: $showDeleteWarning) {

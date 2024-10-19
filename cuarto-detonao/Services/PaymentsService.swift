@@ -42,4 +42,8 @@ final class PaymentsService {
         
         return paymentResponse
     }
+    
+    func deletePayment() async throws {
+        
+    }
 }

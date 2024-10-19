@@ -42,7 +42,7 @@ class NewReserveViewModel {
         
         // Agregar costo adicional si se incluye foto y se ha seleccionado una imagen
         if includePhotoAndMessage {
-            totalToPay += 2000
+            totalToPay += 1000
         }
         
         return totalToPay
