@@ -29,6 +29,8 @@ struct ReservesView: View {
     @State private var selectedReserveToPay: ReserveWithPaymentModel = ReserveWithPaymentModel(id: 0, remitenteNombre: "", remitenteApellido: "", remitentePseudonimo: "", remitenteCurso: "", remitenteAnonimo: false, destinatarioNombre: "", destinatarioApellido: "", destinatarioPseudonimo: "", destinatarioCurso: "", totalAPagar: 0, dedicatoria: "", fotoURL: "", createdAt: "", pago: PaymentModel(id: 0, reservaID: 0, metodoPago: "", monto: 0, estado: "", fechaPago: ""), detalles: [])
     @State private var newPaymentResponse: NewPaymentResponse = NewPaymentResponse(message: "", paymentID: 0)
     @State private var isPaymentCreated = false
+    
+    //Estados para eliminar un pago
     @State private var paymentToDelete: ReserveWithPaymentModel?
     @State private var showDeletePaymentWarning = false
     @State private var isPaymentDeleted = false
@@ -101,7 +103,11 @@ struct ReservesView: View {
                 }
                 
                 List(searchResults, id: \.id) { reserve in
-                    NavigationLink(destination: ReserveView(reserveModel: reserve)) {
+                    NavigationLink(destination:
+                                    ReserveView(reserveModel: reserve)
+                                        .environment(paymentsViewModel)
+                                        .environment(viewModel)
+                    ) {
                         HStack(spacing: 30) {
                             Text(String(reserve.id))
                             Text("\(reserve.remitenteNombre) \(reserve.remitenteApellido)")
@@ -120,6 +126,8 @@ struct ReservesView: View {
                             
                             NavigationLink {
                                 ReserveView(reserveModel: reserve)
+                                    .environment(paymentsViewModel)
+                                    .environment(viewModel)
                             } label: {
                                 Label("Ver detalles", systemImage: "info.circle")
                             }

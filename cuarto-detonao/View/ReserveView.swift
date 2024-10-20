@@ -9,15 +9,30 @@ import SwiftUI
 
 struct ReserveView: View {
     
-    var reserveModel: ReserveWithPaymentModel
+    @State var reserveModel: ReserveWithPaymentModel
     
     @State private var reserveViewModel = ReserveViewModel()
-    @State private var reservesViewModel = ReservesViewModel()
+    
+    @Environment(ReservesViewModel.self) var reservesViewModel
+    @State private var paymentsViewModel = PaymentsViewModel()
+    
     @State private var date = ""
     
+    //Estados para eliminar una reserva
     @State private var showDeleteWarning = false
     @State private var deletingData = false
     @State private var isReserveDeleted = false
+    
+    // Estados para los págos
+    @State private var showCreatePaymentView = false
+    @State private var showCreatingPaymentMessage = false
+    @State private var newPaymentResponse: NewPaymentResponse = NewPaymentResponse(message: "", paymentID: 0)
+    @State private var isPaymentCreated = false
+    
+    //Estados para eliminar un pago
+    @State private var paymentToDelete: ReserveWithPaymentModel?
+    @State private var showDeletePaymentWarning = false
+    @State private var isPaymentDeleted = false
     
     var body: some View {
         NavigationStack {
@@ -171,10 +186,12 @@ struct ReserveView: View {
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
                     Menu {
-                        Button {
-                            //
-                        } label: {
-                            Label("Pagar", systemImage: "creditcard")
+                        if reserveModel.pago == nil {
+                            Button {
+                                showCreatePaymentView = true
+                            } label: {
+                                Label("Pagar", systemImage: "creditcard")
+                            }
                         }
                         
                         NavigationLink {
@@ -190,10 +207,32 @@ struct ReserveView: View {
                         } label: {
                             Label("Eliminar", systemImage: "trash")
                         }
+                        
+                        if reserveModel.pago != nil {
+                            Button(role: .destructive) {
+                                showDeletePaymentWarning = true
+                            } label: {
+                                Label("Eliminar pago", systemImage: "creditcard")
+                            }
+                        }
                     } label: {
                         Text("Opciones")
                     }
                 }
+            }
+            .sheet(isPresented: $showCreatePaymentView) {
+                CreatePaymentView(reserve: $reserveModel, showCreatingPaymentMessage: $showCreatingPaymentMessage, newPaymentResponse: $newPaymentResponse)
+                    .presentationDetents([.height(350)])
+                    .presentationDragIndicator(.visible)
+                    .environment(paymentsViewModel)
+                    .onDisappear {
+                        if let pago = reserveModel.pago {
+                            if let reserveToReplaceIndex = reservesViewModel.reserves.firstIndex(where: { $0.id == reserveModel.id }) {
+                                print(reserveToReplaceIndex)
+                                reservesViewModel.reserves[reserveToReplaceIndex].pago = pago
+                            }
+                        }
+                    }
             }
             .alert(isPresented: $showDeleteWarning) {
                 Alert(title: Text("¿Quieres eliminar la reserva de \(reserveModel.remitenteNombre)?"), primaryButton: .destructive(Text("Eliminar")) {
@@ -209,12 +248,17 @@ struct ReserveView: View {
             }
             .task {
                 date = reserveViewModel.transformDate(isoDate: reserveModel.createdAt)
+                
+                isPaymentCreated = paymentsViewModel.isPaymentCreated
             }
         }
         .overlay {
             if deletingData {
                 WaitingAlertView(message: "Eliminando reserva")
             }
+        }
+        .alert("\(newPaymentResponse.message)", isPresented: $paymentsViewModel.isPaymentCreated) {
+            Button("Aceptar") { }
         }
     }
 }
