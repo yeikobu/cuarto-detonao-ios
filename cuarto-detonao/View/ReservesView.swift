@@ -202,7 +202,7 @@ struct ReservesView: View {
                                     }
                                 },
                                 secondaryButton: .cancel(Text("Cancelar")) {
-                                    reserveToDelete = nil // Resetear la reserva seleccionada si se cancela
+                                    paymentToDelete = nil // Resetear la reserva seleccionada si se cancela
                                 }
                             )
                         }

@@ -210,6 +210,7 @@ struct ReserveView: View {
                         
                         if reserveModel.pago != nil {
                             Button(role: .destructive) {
+                                paymentToDelete = reserveModel
                                 showDeletePaymentWarning = true
                             } label: {
                                 Label("Eliminar pago", systemImage: "creditcard")
@@ -245,6 +246,34 @@ struct ReserveView: View {
             }
             .alert("Reserva eliminada exitosamente", isPresented: $isReserveDeleted) {
                 Button("Aceptar") {}
+            }
+            .alert(isPresented: $showDeletePaymentWarning) {
+                Alert(
+                    title: Text("¿Quieres eliminar el pago de \(paymentToDelete?.remitenteNombre ?? "")?"),
+                    primaryButton: .destructive(Text("Eliminar")) {
+                        Task {
+                            if let reserve = paymentToDelete {
+                                if let pago = reserve.pago {
+                                    print(pago.id)
+                                    deletingData = true
+                                    isPaymentDeleted = await paymentsViewModel.deletePaymentByID(id: pago.id)
+                                    print(isPaymentDeleted)
+                                    if isPaymentDeleted {
+                                        if let index = reservesViewModel.reserves.firstIndex(where: { $0.id == reserve.id }) {
+                                            reservesViewModel.reserves[index].pago = nil
+                                        }
+                                        reserveModel.pago = nil
+                                    }
+                                    deletingData = false
+                                    paymentToDelete = nil
+                                }
+                            }
+                        }
+                    },
+                    secondaryButton: .cancel(Text("Cancelar")) {
+                        paymentToDelete = nil // Resetear la reserva seleccionada si se cancela
+                    }
+                )
             }
             .task {
                 date = reserveViewModel.transformDate(isoDate: reserveModel.createdAt)
