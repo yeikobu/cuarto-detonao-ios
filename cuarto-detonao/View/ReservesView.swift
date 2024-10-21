@@ -149,6 +149,8 @@ struct ReservesView: View {
                                 }
                             }
                             
+                            Divider()
+                            
                             Button(role: .destructive) {
                                 reserveToDelete = reserve
                                 showDeleteWarning = true

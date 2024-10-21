@@ -248,12 +248,6 @@ struct ReserveView: View {
                         
                         Divider()
                         
-                        Button(role: .destructive) {
-                            showDeleteWarning.toggle()
-                        } label: {
-                            Label("Eliminar", systemImage: "trash")
-                        }
-                        
                         if reserveModel.pago != nil {
                             Button(role: .destructive) {
                                 paymentToDelete = reserveModel
@@ -261,6 +255,14 @@ struct ReserveView: View {
                             } label: {
                                 Label("Eliminar pago", systemImage: "creditcard")
                             }
+                        }
+                        
+                        Divider()
+                        
+                        Button(role: .destructive) {
+                            showDeleteWarning.toggle()
+                        } label: {
+                            Label("Eliminar", systemImage: "trash")
                         }
                     } label: {
                         Text("Opciones")
