@@ -54,7 +54,7 @@ struct PaymentModel: Codable {
     let metodoPago: String
     let monto: Int
     let estado: String
-    let fechaPago: String?
+    let fechaPago: String
 
     enum CodingKeys: String, CodingKey {
         case id
@@ -70,11 +70,13 @@ struct CreatePaymentModel: Codable {
     let metodoPago: String
     let monto: Int
     let estado: String
+    let fechaPago: String
 
     enum CodingKeys: String, CodingKey {
         case reservaID = "reserva_id"
         case metodoPago = "metodo_pago"
         case monto, estado
+        case fechaPago = "fecha_pago"
     }
 }
 

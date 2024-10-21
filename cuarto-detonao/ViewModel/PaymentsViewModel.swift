@@ -43,4 +43,11 @@ class PaymentsViewModel {
         
         return false
     }
+    
+    func transformDate(date: Date) -> String {
+        let dateFormatter = DateFormatter()
+       dateFormatter.dateFormat = "EEE d 'de' MMMM 'de' yyyy 'a las' HH:mm"
+       dateFormatter.locale = Locale(identifier: "es_ES") // Ajusta la configuración regional al español
+       return dateFormatter.string(from: date)
+    }
 }

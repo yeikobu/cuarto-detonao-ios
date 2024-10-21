@@ -84,12 +84,15 @@ struct CreatePaymentView: View {
                         Button("Crear pago") {
                             Task {
                                 showCreatingPaymentMessage = true
-                                let paymentData = CreatePaymentModel(reservaID: reserve.id, metodoPago: paymentMethod, monto: reserve.totalAPagar, estado: "No entregado")
+                                
+                                let currentDate = paymentsViewModel.transformDate(date: Date())
+                                
+                                let paymentData = CreatePaymentModel(reservaID: reserve.id, metodoPago: paymentMethod, monto: reserve.totalAPagar, estado: "No entregado", fechaPago: currentDate)
                                 
                                 if let paymentResponse = await paymentsViewModel.createNewPayment(paymentModel: paymentData) {
                                     newPaymentResponse = paymentResponse
                                     
-                                    reserve.pago = PaymentModel(id: paymentResponse.paymentID, reservaID: reserve.id, metodoPago: paymentData.metodoPago, monto: paymentData.monto, estado: paymentData.estado, fechaPago: nil)
+                                    reserve.pago = PaymentModel(id: paymentResponse.paymentID, reservaID: reserve.id, metodoPago: paymentData.metodoPago, monto: paymentData.monto, estado: paymentData.estado, fechaPago: currentDate)
                                 }
                                 
                                 showCreatingPaymentMessage = false

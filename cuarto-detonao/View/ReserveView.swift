@@ -17,6 +17,7 @@ struct ReserveView: View {
     @State private var paymentsViewModel = PaymentsViewModel()
     
     @State private var date = ""
+    @State private var paymentDate = ""
     
     //Estados para eliminar una reserva
     @State private var showDeleteWarning = false
@@ -181,6 +182,51 @@ struct ReserveView: View {
                 } header: {
                     Text("Detalles de la reserva")
                 }
+                
+                if let pago = reserveModel.pago {
+                    Section {
+                        HStack {
+                            Text("Pedido pagado")
+                                .foregroundStyle(.secondary)
+                            
+                            Spacer()
+                            
+                            Text("Sí")
+                        }
+                        
+                        HStack {
+                            Text("Total pagado")
+                                .foregroundStyle(.secondary)
+                            
+                            Spacer()
+                            
+                            Text("\(pago.monto)")
+                        }
+                        
+                        HStack {
+                            Text("Método de pago")
+                                .foregroundStyle(.secondary)
+                            
+                            Spacer()
+                            
+                            Text(pago.metodoPago)
+                        }
+                        
+                        HStack {
+                            Text("Fecha de pago")
+                                .foregroundStyle(.secondary)
+                            
+                            Spacer()
+                            
+                            Text(paymentDate)
+                                .font(.footnote)
+                                .frame(maxWidth: 170, alignment: .trailing)
+                                .multilineTextAlignment(.trailing)
+                        }
+                    } header: {
+                        Text("Estado de la reserva")
+                    }
+                }
             }
             .navigationTitle("Reserva de \(reserveModel.remitenteNombre)")
             .toolbar {
@@ -277,6 +323,11 @@ struct ReserveView: View {
             }
             .task {
                 date = reserveViewModel.transformDate(isoDate: reserveModel.createdAt)
+                if let pago = reserveModel.pago {
+                    
+                    paymentDate = reserveViewModel.transformDate(isoDate: pago.fechaPago)
+                }
+//                paymentDate = reserveViewModel.transformDate(isoDate: reserveModel.pago?.fechaPago)
                 
                 isPaymentCreated = paymentsViewModel.isPaymentCreated
             }
