@@ -11,7 +11,7 @@ import PhotosUI
 struct UpdateReserveView: View {
     @Environment(\.dismiss) var dismiss
     
-    var selectedReserve: ReserveWithPaymentModel
+    @Binding var selectedReserve: ReserveWithPaymentModel
     @State private var updateReserveViewModel = UpdateReserveViewModel()
     @State private var reserveToUpdate = NewReserveModel(remitenteNombre: "", remitenteApellido: "", remitentePseudonimo: "", remitenteCurso: "", remitenteAnonimo: false, destinatarioNombre: "", destinatarioApellido: "", destinatarioPseudonimo: "", destinatarioCurso: "", totalAPagar: 0, dedicatoria: "", fotoURL: "", detalles: [])
     
@@ -358,6 +358,26 @@ struct UpdateReserveView: View {
                         showCreatingReserve = true
                         reserveToUpdate.totalAPagar = totalToPay
                         isReserveUpdated = await updateReserveViewModel.updateReserveByID(id: selectedReserve.id, reserveModel: reserveToUpdate)
+                        
+                        if isReserveUpdated {
+                            // Actualiza la reserva localmente en caso de éxito
+                            selectedReserve.remitenteNombre = reserveToUpdate.remitenteNombre
+                            selectedReserve.remitenteApellido = reserveToUpdate.remitenteApellido
+                            selectedReserve.remitentePseudonimo = reserveToUpdate.remitentePseudonimo
+                            selectedReserve.remitenteCurso = reserveToUpdate.remitenteCurso
+                            selectedReserve.remitenteAnonimo = reserveToUpdate.remitenteAnonimo
+                            selectedReserve.destinatarioNombre = reserveToUpdate.destinatarioNombre
+                            selectedReserve.destinatarioApellido = reserveToUpdate.destinatarioApellido
+                            selectedReserve.destinatarioPseudonimo = reserveToUpdate.destinatarioPseudonimo
+                            selectedReserve.destinatarioCurso = reserveToUpdate.destinatarioCurso
+                            selectedReserve.totalAPagar = reserveToUpdate.totalAPagar
+                            selectedReserve.dedicatoria = reserveToUpdate.dedicatoria
+                            selectedReserve.fotoURL = reserveToUpdate.fotoURL
+                            selectedReserve.detalles = reserveToUpdate.detalles.map { detalle in
+                                Detalle(colorNombre: detalle.colorNombre, cantidad: detalle.cantidad)
+                            }
+                        }
+                        
                         showCreatingReserve = false
                     }
                 }
@@ -376,6 +396,26 @@ struct UpdateReserveView: View {
                         }
                         
                         isReserveUpdated = await updateReserveViewModel.updateReserveByID(id: selectedReserve.id, reserveModel: reserveToUpdate)
+                        
+                        if isReserveUpdated {
+                            // Actualiza la reserva localmente en caso de éxito
+                            selectedReserve.remitenteNombre = reserveToUpdate.remitenteNombre
+                            selectedReserve.remitenteApellido = reserveToUpdate.remitenteApellido
+                            selectedReserve.remitentePseudonimo = reserveToUpdate.remitentePseudonimo
+                            selectedReserve.remitenteCurso = reserveToUpdate.remitenteCurso
+                            selectedReserve.remitenteAnonimo = reserveToUpdate.remitenteAnonimo
+                            selectedReserve.destinatarioNombre = reserveToUpdate.destinatarioNombre
+                            selectedReserve.destinatarioApellido = reserveToUpdate.destinatarioApellido
+                            selectedReserve.destinatarioPseudonimo = reserveToUpdate.destinatarioPseudonimo
+                            selectedReserve.destinatarioCurso = reserveToUpdate.destinatarioCurso
+                            selectedReserve.totalAPagar = reserveToUpdate.totalAPagar
+                            selectedReserve.dedicatoria = reserveToUpdate.dedicatoria
+                            selectedReserve.fotoURL = reserveToUpdate.fotoURL
+                            selectedReserve.detalles = reserveToUpdate.detalles.map { detalle in
+                                Detalle(colorNombre: detalle.colorNombre, cantidad: detalle.cantidad)
+                            }
+                        }
+                        
                         showCreatingReserve = false
                     }
                 }

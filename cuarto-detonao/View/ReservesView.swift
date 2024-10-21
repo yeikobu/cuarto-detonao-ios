@@ -37,6 +37,10 @@ struct ReservesView: View {
     
     @State private var viewTitle = "Reservas totales"
     
+    //Estado para actualizar una reserva
+    @State private var selectedReserveToUpdate: ReserveWithPaymentModel = ReserveWithPaymentModel(id: 0, remitenteNombre: "", remitenteApellido: "", remitentePseudonimo: "", remitenteCurso: "", remitenteAnonimo: false, destinatarioNombre: "", destinatarioApellido: "", destinatarioPseudonimo: "", destinatarioCurso: "", totalAPagar: 0, dedicatoria: "", fotoURL: "", createdAt: "", pago: PaymentModel(id: 0, reservaID: 0, metodoPago: "", monto: 0, estado: "", fechaPago: ""), detalles: [])
+    @State private var showUpdateReserveView = false
+    
     var searchResults: [ReserveWithPaymentModel] {
         let filteredReserves: [ReserveWithPaymentModel]
             
@@ -132,8 +136,9 @@ struct ReservesView: View {
                                 Label("Ver detalles", systemImage: "info.circle")
                             }
                             
-                            NavigationLink {
-                                UpdateReserveView(selectedReserve: reserve)
+                            Button {
+                                selectedReserveToUpdate = reserve
+                                showUpdateReserveView = true
                             } label: {
                                 Label("Editar", systemImage: "pencil.and.list.clipboard")
                             }
@@ -243,6 +248,9 @@ struct ReservesView: View {
                 NewReserveView()
             }
         }
+        .navigationDestination(isPresented: $showUpdateReserveView, destination: {
+            UpdateReserveView(selectedReserve: $selectedReserveToUpdate)
+        })
         .alert("Reserva eliminada exitosamente", isPresented: $isReserveDeleted) {
             Button("Aceptar") {}
         }

@@ -241,7 +241,7 @@ struct ReserveView: View {
                         }
                         
                         NavigationLink {
-                            UpdateReserveView(selectedReserve: reserveModel)
+                            UpdateReserveView(selectedReserve: $reserveModel)
                         } label: {
                             Label("Editar", systemImage: "pencil.and.list.clipboard")
                         }
