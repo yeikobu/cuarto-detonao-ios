@@ -279,6 +279,7 @@ struct ReserveView: View {
                             if let reserveToReplaceIndex = reservesViewModel.reserves.firstIndex(where: { $0.id == reserveModel.id }) {
                                 print(reserveToReplaceIndex)
                                 reservesViewModel.reserves[reserveToReplaceIndex].pago = pago
+                                paymentDate = paymentsViewModel.transformDate(date: Date())
                             }
                         }
                     }
@@ -329,7 +330,6 @@ struct ReserveView: View {
                     
                     paymentDate = reserveViewModel.transformDate(isoDate: pago.fechaPago)
                 }
-//                paymentDate = reserveViewModel.transformDate(isoDate: reserveModel.pago?.fechaPago)
                 
                 isPaymentCreated = paymentsViewModel.isPaymentCreated
             }
