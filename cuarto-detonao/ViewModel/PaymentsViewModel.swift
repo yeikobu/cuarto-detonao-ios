@@ -44,6 +44,19 @@ class PaymentsViewModel {
         return false
     }
     
+    @MainActor
+    func changePaymentStatus(id: Int, paymentModel: CreatePaymentModel) async -> Bool {
+        do {
+            return try await paymentsService.changePaymentStatus(id: id, payment: paymentModel)
+        } catch {
+            showrError = true
+            errorMessage = "No se pudo actualizar el estado"
+            print("Error: \(error)")
+        }
+        
+        return false
+    }
+    
     func transformDate(date: Date) -> String {
         let dateFormatter = DateFormatter()
        dateFormatter.dateFormat = "EEE d 'de' MMMM 'de' yyyy 'a las' HH:mm"

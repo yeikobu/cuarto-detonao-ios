@@ -128,6 +128,22 @@ struct ReservesView: View {
                                 }
                             }
                             
+                            if let pago = reserve.pago {
+                                if pago.estado == "No entregado" {
+                                    Button {
+    //                                    showCreatePaymentView = true
+                                    } label: {
+                                        Label("Marcar como entregado", systemImage: "checkmark.seal")
+                                    }
+                                } else {
+                                    Button {
+    //                                    showCreatePaymentView = true
+                                    } label: {
+                                        Label("Marcar como no entregado", systemImage: "xmark.seal")
+                                    }
+                                }
+                            }
+                            
                             NavigationLink {
                                 ReserveView(reserveModel: reserve)
                                     .environment(paymentsViewModel)

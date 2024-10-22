@@ -55,5 +55,24 @@ final class PaymentsService {
         return true
     }
     
-    
+    func changePaymentStatus(id: Int, payment: CreatePaymentModel) async throws -> Bool {
+        guard let url = URL(string: "\(baseURL)/payment/\(id)") else { return false }
+        
+        print(payment)
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "PUT"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let jsonData = try JSONEncoder().encode(payment)
+        request.httpBody = jsonData
+        
+        let (_, response) = try await URLSession.shared.data(for: request)
+        
+        if let apiResponse = response as? HTTPURLResponse, !(200...299).contains(apiResponse.statusCode) {
+            throw NSError(domain: "APIService", code: apiResponse.statusCode, userInfo: [NSLocalizedDescriptionKey: "Error al insertar los datos: \(apiResponse.statusCode)"])
+        }
+        
+        return true
+    }
 }

@@ -35,6 +35,10 @@ struct ReserveView: View {
     @State private var showDeletePaymentWarning = false
     @State private var isPaymentDeleted = false
     
+    //Estados para actualizar el estado de un pago
+    @State private var isPaymentStatusChanged = false
+    @State private var isChangingPaymentStatusPressed = false
+    
     var body: some View {
         NavigationStack {
             List {
@@ -240,6 +244,36 @@ struct ReserveView: View {
                             }
                         }
                         
+                        if let pago = reserveModel.pago {
+                            if pago.estado == "No entregado" {
+                                Button {
+                                    Task {
+                                        isChangingPaymentStatusPressed = true
+                                        isPaymentStatusChanged = await paymentsViewModel.changePaymentStatus(id: pago.id, paymentModel: CreatePaymentModel(reservaID: reserveModel.id, metodoPago: pago.metodoPago, monto: pago.monto, estado: "Entregado"))
+                                        if isPaymentStatusChanged {
+                                            reserveModel.pago?.estado = "Entregado"
+                                        }
+                                        isChangingPaymentStatusPressed = false
+                                    }
+                                } label: {
+                                    Label("Marcar como entregado", systemImage: "checkmark.seal")
+                                }
+                            } else {
+                                Button {
+                                    Task {
+                                        isChangingPaymentStatusPressed = true
+                                        isPaymentStatusChanged = await paymentsViewModel.changePaymentStatus(id: pago.id, paymentModel: CreatePaymentModel(reservaID: reserveModel.id, metodoPago: pago.metodoPago, monto: pago.monto, estado: "No entregado"))
+                                        if isPaymentStatusChanged {
+                                            reserveModel.pago?.estado = "No entregado"
+                                        }
+                                        isChangingPaymentStatusPressed = false
+                                    }
+                                } label: {
+                                    Label("Marcar como no entregado", systemImage: "xmark.seal")
+                                }
+                            }
+                        }
+                        
                         NavigationLink {
                             UpdateReserveView(selectedReserve: $reserveModel)
                         } label: {
@@ -296,6 +330,11 @@ struct ReserveView: View {
             .alert("Reserva eliminada exitosamente", isPresented: $isReserveDeleted) {
                 Button("Aceptar") {}
             }
+            .alert("Pedido de \(reserveModel.remitenteNombre) ha cambiado a \(reserveModel.pago?.estado ?? "")", isPresented: $isPaymentStatusChanged) {
+                Button("Aceptar") {
+                    isPaymentStatusChanged = false
+                }
+            }
             .alert(isPresented: $showDeletePaymentWarning) {
                 Alert(
                     title: Text("¿Quieres eliminar el pago de \(paymentToDelete?.remitenteNombre ?? "")?"),
@@ -337,6 +376,10 @@ struct ReserveView: View {
         .overlay {
             if deletingData {
                 WaitingAlertView(message: "Eliminando reserva")
+            }
+            
+            if isChangingPaymentStatusPressed {
+                WaitingAlertView(message: "Cambiando estado del pedido")
             }
         }
         .alert("\(newPaymentResponse.message)", isPresented: $paymentsViewModel.isPaymentCreated) {
