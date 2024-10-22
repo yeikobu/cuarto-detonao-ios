@@ -48,17 +48,32 @@ class ReservesViewModel {
         var roses: [String: Int] = [:]
 
         for reserve in reserves {
-            for detalle in reserve.detalles {
-                if let currentQuantity = roses[detalle.colorNombre] {
-                    roses[detalle.colorNombre] = currentQuantity + detalle.cantidad
-                } else {
-                    roses[detalle.colorNombre] = detalle.cantidad
+            if reserve.pago != nil {
+                for detalle in reserve.detalles {
+                    if let currentQuantity = roses[detalle.colorNombre] {
+                        roses[detalle.colorNombre] = currentQuantity + detalle.cantidad
+                    } else {
+                        roses[detalle.colorNombre] = detalle.cantidad
+                    }
                 }
             }
         }
         
         let rosesModel = roses.map { RoseModel(roseName: $0.key, roseQuantity: $0.value) }
         
-        return rosesModel.sorted { $0.roseQuantity > $1.roseQuantity } 
+        return rosesModel.sorted { $0.roseQuantity > $1.roseQuantity }
+    }
+    
+    
+    @MainActor
+    func calcTotalOfRoses(roses: [RoseModel]) -> Int {
+        return roses.reduce(0) { $0 + $1.roseQuantity }
+    }
+    
+    @MainActor
+    func getQuantityOfPhotos() -> Int {
+        let paidReserves = reserves.filter { $0.pago != nil }
+        let reservesWithPhotos = paidReserves.filter { $0.fotoURL != nil }
+        return reservesWithPhotos.count
     }
 }
