@@ -42,4 +42,23 @@ class ReservesViewModel {
     func getReservesWithPayments(reserves: [ReserveWithPaymentModel]) -> [ReserveWithPaymentModel] {
         return reserves.filter { $0.pago != nil }
     }
+    
+    @MainActor
+    func getTotalRosesByColor() -> [RoseModel] {
+        var roses: [String: Int] = [:]
+
+        for reserve in reserves {
+            for detalle in reserve.detalles {
+                if let currentQuantity = roses[detalle.colorNombre] {
+                    roses[detalle.colorNombre] = currentQuantity + detalle.cantidad
+                } else {
+                    roses[detalle.colorNombre] = detalle.cantidad
+                }
+            }
+        }
+        
+        let rosesModel = roses.map { RoseModel(roseName: $0.key, roseQuantity: $0.value) }
+        
+        return rosesModel.sorted { $0.roseQuantity > $1.roseQuantity } 
+    }
 }

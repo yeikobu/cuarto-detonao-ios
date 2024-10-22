@@ -12,6 +12,8 @@ struct ReservesView: View {
     @State private var paymentsViewModel = PaymentsViewModel()
     @State private var fetchingData = false
     
+    @State private var showResumeView = false
+    
     // Estados para borrar reserva
     @State private var showDeleteWarning = false
     @State private var deletingData = false
@@ -298,6 +300,9 @@ struct ReservesView: View {
                 NewReserveView()
             }
         }
+        .navigationDestination(isPresented: $showResumeView, destination: {
+            MoreInfoView()
+        })
         .navigationDestination(isPresented: $showUpdateReserveView, destination: {
             UpdateReserveView(selectedReserve: $selectedReserveToUpdate)
         })
@@ -313,9 +318,17 @@ struct ReservesView: View {
             fetchingData = false
         }
         .toolbar {
-            ToolbarItem {
+            ToolbarItem(placement: .primaryAction) {
                 Button("Nueva reserva") {
                     newReserve.toggle()
+                }
+            }
+            
+            ToolbarItem(placement: .topBarLeading) {
+                Button {
+                    showResumeView.toggle()
+                } label: {
+                    Image(systemName: "info.circle")
                 }
             }
         }
