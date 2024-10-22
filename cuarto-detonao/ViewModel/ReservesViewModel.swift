@@ -76,4 +76,10 @@ class ReservesViewModel {
         let reservesWithPhotos = paidReserves.filter { $0.fotoURL != nil }
         return reservesWithPhotos.count
     }
+    
+    @MainActor
+    func calcTotalOfMoneyCollected() -> Int {
+        let paidReserves = reserves.filter { $0.pago != nil }
+        return paidReserves.reduce(0) { $0 + $1.totalAPagar }
+    }
 }

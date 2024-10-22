@@ -13,6 +13,7 @@ struct MoreInfoView: View {
     @State private var roses: [RoseModel] = []
     @State private var totalOfRoses = 0
     @State private var quantityOfPhotos = 0
+    @State private var totalOfMoneyCollected = 0
     
     var body: some View {
         NavigationStack {
@@ -48,6 +49,21 @@ struct MoreInfoView: View {
                 } header: {
                     Text("Cantidad de fotos con dedicatoria pagadas")
                 }
+                
+                Section {
+                    HStack {
+                        Text("Total")
+                        
+                        Spacer()
+                        
+                        Text("$\(totalOfMoneyCollected)")
+                    }
+                    .bold()
+                } header: {
+                    Text("Total de dinero recaudado")
+                } footer: {
+                    Text("La suma total de todos los pedidos pagados.")
+                }
             }
         }
         .navigationTitle("Resumen de los pedidos")
@@ -56,6 +72,7 @@ struct MoreInfoView: View {
             roses = reservesViewModel.getTotalRosesByColor()
             totalOfRoses = reservesViewModel.calcTotalOfRoses(roses: roses)
             quantityOfPhotos = reservesViewModel.getQuantityOfPhotos()
+            totalOfMoneyCollected = reservesViewModel.calcTotalOfMoneyCollected()
         }
     }
 }
