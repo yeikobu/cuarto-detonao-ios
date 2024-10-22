@@ -42,6 +42,21 @@ struct ReserveView: View {
     var body: some View {
         NavigationStack {
             List {
+                if let pago = reserveModel.pago {
+                    Section {
+                        HStack {
+                            Text(pago.estado)
+                            
+                            Spacer()
+                            
+                            Image(systemName: pago.estado == "Entregado" ? "checkmark.seal" : "xmark.seal")
+                                .foregroundStyle(pago.estado == "Entregado" ? Color.green : Color.red)
+                        }
+                    } header: {
+                        Text("Estado del pedido")
+                    }
+                }
+                
                 // MARK: - Datos remitente
                 Section {
                     HStack {
