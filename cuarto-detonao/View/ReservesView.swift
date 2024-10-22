@@ -57,7 +57,9 @@ struct ReservesView: View {
         case .entregadas:
             filteredReserves = viewModel.reserves.filter { $0.pago?.estado == "Entregado" }
         case .nonDeliveried:
-            filteredReserves = viewModel.reserves.filter { $0.pago?.estado != "No entregado" || $0.pago == nil }
+            filteredReserves = viewModel.reserves.filter { $0.pago?.estado == "No entregado"}
+        case .noPagadas:
+            filteredReserves = viewModel.reserves.filter { $0.pago == nil }
         }
         
         if searchedText.isEmpty {
@@ -73,8 +75,11 @@ struct ReservesView: View {
     
     
     enum Filter: String, CaseIterable, Identifiable {
-        case todas, pagadas, entregadas
-        case nonDeliveried = "No entregadas"
+        case todas = "Todas las reservas"
+        case pagadas = "Reservas pagadas"
+        case noPagadas = "Reservas no pagadas"
+        case entregadas = "Reservas entregadas"
+        case nonDeliveried = "Reservas no entregadas"
         var id: Self { self }
     }
     
@@ -92,11 +97,11 @@ struct ReservesView: View {
             } else {
                 Picker("Filtros", selection: $selectedFiler) {
                     ForEach(Filter.allCases) { filter in
-                        Text(filter.rawValue.capitalized)
+                        Text(filter.rawValue)
+                            .font(.caption)
                     }
                 }
-                .pickerStyle(.segmented)
-                .padding(.horizontal, 10)
+                .pickerStyle(.menu)
                 .onChange(of: selectedFiler) {
                     switch selectedFiler {
                     case .todas:
@@ -107,8 +112,11 @@ struct ReservesView: View {
                         viewTitle = "Pedidos entregados"
                     case .nonDeliveried:
                         viewTitle = "Pedidos no entregados"
+                    case .noPagadas:
+                        viewTitle = "Reservas no pagadas"
                     }
                 }
+                .frame(maxWidth: .infinity, alignment: .trailing)
                 
                 List(searchResults, id: \.id) { reserve in
                     NavigationLink(destination:
