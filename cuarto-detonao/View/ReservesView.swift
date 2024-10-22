@@ -41,6 +41,10 @@ struct ReservesView: View {
     @State private var selectedReserveToUpdate: ReserveWithPaymentModel = ReserveWithPaymentModel(id: 0, remitenteNombre: "", remitenteApellido: "", remitentePseudonimo: "", remitenteCurso: "", remitenteAnonimo: false, destinatarioNombre: "", destinatarioApellido: "", destinatarioPseudonimo: "", destinatarioCurso: "", totalAPagar: 0, dedicatoria: "", fotoURL: "", createdAt: "", pago: PaymentModel(id: 0, reservaID: 0, metodoPago: "", monto: 0, estado: "", fechaPago: ""), detalles: [])
     @State private var showUpdateReserveView = false
     
+    //Estados para actualizar el estado de un pago
+    @State private var isPaymentStatusChanged = false
+    @State private var isChangingPaymentStatusPressed = false
+    
     var searchResults: [ReserveWithPaymentModel] {
         let filteredReserves: [ReserveWithPaymentModel]
             
@@ -131,13 +135,31 @@ struct ReservesView: View {
                             if let pago = reserve.pago {
                                 if pago.estado == "No entregado" {
                                     Button {
-    //                                    showCreatePaymentView = true
+                                        Task {
+                                            isChangingPaymentStatusPressed = true
+                                            isPaymentStatusChanged = await paymentsViewModel.changePaymentStatus(id: pago.id, paymentModel: CreatePaymentModel(reservaID: reserve.id, metodoPago: pago.metodoPago, monto: pago.monto, estado: "Entregado"))
+                                            if isPaymentStatusChanged {
+                                                if let index = viewModel.reserves.firstIndex(where: { $0.id == reserve.id }) {
+                                                    viewModel.reserves[index].pago?.estado = "Entregado"
+                                                }
+                                            }
+                                            isChangingPaymentStatusPressed = false
+                                        }
                                     } label: {
                                         Label("Marcar como entregado", systemImage: "checkmark.seal")
                                     }
                                 } else {
                                     Button {
-    //                                    showCreatePaymentView = true
+                                        Task {
+                                            isChangingPaymentStatusPressed = true
+                                            isPaymentStatusChanged = await paymentsViewModel.changePaymentStatus(id: pago.id, paymentModel: CreatePaymentModel(reservaID: reserve.id, metodoPago: pago.metodoPago, monto: pago.monto, estado: "No entregado"))
+                                            if isPaymentStatusChanged {
+                                                if let index = viewModel.reserves.firstIndex(where: { $0.id == reserve.id }) {
+                                                    viewModel.reserves[index].pago?.estado = "No entregado"
+                                                }
+                                            }
+                                            isChangingPaymentStatusPressed = false
+                                        }
                                     } label: {
                                         Label("Marcar como no entregado", systemImage: "xmark.seal")
                                     }
@@ -254,6 +276,10 @@ struct ReservesView: View {
                 .overlay {
                     if deletingData {
                         WaitingAlertView(message: "Eliminando Reserva...")
+                    }
+                    
+                    if isChangingPaymentStatusPressed {
+                        WaitingAlertView(message: "Cambiando estado del pedido")
                     }
                 }
             }
