@@ -35,11 +35,12 @@ class UpdateReserveViewModel {
             totalOfRoses += rose.cantidad
         }
         
-        // Calcular el costo de las rosas
-        let setsOfThree = totalOfRoses / 3
-        let remainingRoses = totalOfRoses % 3
-        
-        totalToPay = setsOfThree * 5000 + remainingRoses * 2000
+        // Calcular el costo dependiendo si es múltiplo de 3 o no
+        if totalOfRoses % 3 == 0 {
+            totalToPay = (totalOfRoses / 3) * 5000
+        } else {
+            totalToPay = totalOfRoses * 2000
+        }
         
         // Agregar costo adicional si se incluye foto y se ha seleccionado una imagen
         if includePhotoAndMessage {
