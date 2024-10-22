@@ -91,7 +91,7 @@ struct ReservesView: View {
         NavigationStack {
             if fetchingData {
                 VStack {
-                    Text("Obteniendo datos")
+                    Text("Obteniendo información de las reservas")
                     
                     ProgressView()
                         .scaleEffect(1.4)

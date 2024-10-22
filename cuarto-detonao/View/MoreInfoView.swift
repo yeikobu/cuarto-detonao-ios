@@ -14,65 +14,77 @@ struct MoreInfoView: View {
     @State private var totalOfRoses = 0
     @State private var quantityOfPhotos = 0
     @State private var totalOfMoneyCollected = 0
+    @State private var isLoading = false
     
     var body: some View {
         NavigationStack {
-            List {
-                Section {
-                    ForEach(roses, id: \.self) { rose in
+            if isLoading {
+                VStack {
+                    Text("Obteniendo información de las reservas")
+                    
+                    ProgressView()
+                        .scaleEffect(1.4)
+                }
+            } else {
+                List {
+                    Section {
+                        ForEach(roses, id: \.self) { rose in
+                            HStack {
+                                Text(rose.roseName)
+                                
+                                Spacer()
+                                
+                                Text("\(rose.roseQuantity)")
+                            }
+                        }
+                    } header: {
                         HStack {
-                            Text(rose.roseName)
+                            Text("Rosas totales pagadas")
                             
                             Spacer()
                             
-                            Text("\(rose.roseQuantity)")
+                            Text("\(totalOfRoses)")
                         }
                     }
-                } header: {
-                    HStack {
-                        Text("Rosas totales pagadas")
-                        
-                        Spacer()
-                        
-                        Text("\(totalOfRoses)")
+                    
+                    Section {
+                        HStack {
+                            Text("Fotos con dedicatoria")
+                            
+                            Spacer()
+                            
+                            Text("\(quantityOfPhotos)")
+                        }
+                    } header: {
+                        Text("Cantidad de fotos con dedicatoria pagadas")
                     }
-                }
-                
-                Section {
-                    HStack {
-                        Text("Fotos con dedicatoria")
-                        
-                        Spacer()
-                        
-                        Text("\(quantityOfPhotos)")
+                    
+                    Section {
+                        HStack {
+                            Text("Total")
+                            
+                            Spacer()
+                            
+                            Text("$\(totalOfMoneyCollected)")
+                        }
+                        .bold()
+                    } header: {
+                        Text("Total de dinero recaudado")
+                    } footer: {
+                        Text("La suma total de todos los pedidos pagados.")
                     }
-                } header: {
-                    Text("Cantidad de fotos con dedicatoria pagadas")
-                }
-                
-                Section {
-                    HStack {
-                        Text("Total")
-                        
-                        Spacer()
-                        
-                        Text("$\(totalOfMoneyCollected)")
-                    }
-                    .bold()
-                } header: {
-                    Text("Total de dinero recaudado")
-                } footer: {
-                    Text("La suma total de todos los pedidos pagados.")
                 }
             }
         }
-        .navigationTitle("Resumen de los pedidos")
+        .navigationTitle("Recopilación")
         .task {
+            isLoading = true
             await reservesViewModel.getReservesWithPaymentsInfo()
             roses = reservesViewModel.getTotalRosesByColor()
             totalOfRoses = reservesViewModel.calcTotalOfRoses(roses: roses)
             quantityOfPhotos = reservesViewModel.getQuantityOfPhotos()
             totalOfMoneyCollected = reservesViewModel.calcTotalOfMoneyCollected()
+            isLoading = false
         }
     }
 }
