@@ -333,15 +333,6 @@ struct ReserveView: View {
                         }
                     }
             }
-            .alert(isPresented: $showDeleteWarning) {
-                Alert(title: Text("¿Quieres eliminar la reserva de \(reserveModel.remitenteNombre)?"), primaryButton: .destructive(Text("Eliminar")) {
-                    Task {
-                        deletingData = true
-                        isReserveDeleted = await reservesViewModel.deleteReserveByID(id: reserveModel.id)
-                        deletingData = false
-                    }
-                }, secondaryButton: .cancel())
-            }
             .alert("Reserva eliminada exitosamente", isPresented: $isReserveDeleted) {
                 Button("Aceptar") {}
             }
@@ -387,6 +378,15 @@ struct ReserveView: View {
                 
                 isPaymentCreated = paymentsViewModel.isPaymentCreated
             }
+        }
+        .alert(isPresented: $showDeleteWarning) {
+            Alert(title: Text("¿Quieres eliminar la reserva de \(reserveModel.remitenteNombre)?"), primaryButton: .destructive(Text("Eliminar")) {
+                Task {
+                    deletingData = true
+                    isReserveDeleted = await reservesViewModel.deleteReserveByID(id: reserveModel.id)
+                    deletingData = false
+                }
+            }, secondaryButton: .cancel())
         }
         .overlay {
             if deletingData {

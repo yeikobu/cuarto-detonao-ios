@@ -207,32 +207,10 @@ struct ReservesView: View {
                             Button(role: .destructive) {
                                 reserveToDelete = reserve
                                 showDeleteWarning = true
+                                print(showDeleteWarning)
                             } label: {
                                 Label("Eliminar Reserva", systemImage: "trash")
                             }
-                        }
-                        .alert(isPresented: $showDeleteWarning) {
-                            Alert(
-                                title: Text("¿Quieres eliminar la reserva de \(reserveToDelete?.remitenteNombre ?? "")?"),
-                                primaryButton: .destructive(Text("Eliminar")) {
-                                    Task {
-                                        if let reserve = reserveToDelete {
-                                            deletingData = true
-                                            isReserveDeleted = await viewModel.deleteReserveByID(id: reserve.id)
-                                            if isReserveDeleted {
-                                                if let index = viewModel.reserves.firstIndex(where: { $0.id == reserve.id }) {
-                                                    viewModel.reserves.remove(at: index)
-                                                }
-                                            }
-                                            deletingData = false
-                                            reserveToDelete = nil
-                                        }
-                                    }
-                                },
-                                secondaryButton: .cancel(Text("Cancelar")) {
-                                    reserveToDelete = nil // Resetear la reserva seleccionada si se cancela
-                                }
-                            )
                         }
                         .alert(isPresented: $showDeletePaymentWarning) {
                             Alert(
@@ -267,6 +245,29 @@ struct ReservesView: View {
                     Task {
                         await viewModel.getReservesWithPaymentsInfo()
                     }
+                }
+                .alert(isPresented: $showDeleteWarning) {
+                    Alert(
+                        title: Text("¿Quieres eliminar la reserva de \(reserveToDelete?.remitenteNombre ?? "")?"),
+                        primaryButton: .destructive(Text("Eliminar")) {
+                            Task {
+                                if let reserve = reserveToDelete {
+                                    deletingData = true
+                                    isReserveDeleted = await viewModel.deleteReserveByID(id: reserve.id)
+                                    if isReserveDeleted {
+                                        if let index = viewModel.reserves.firstIndex(where: { $0.id == reserve.id }) {
+                                            viewModel.reserves.remove(at: index)
+                                        }
+                                    }
+                                    deletingData = false
+                                    reserveToDelete = nil
+                                }
+                            }
+                        },
+                        secondaryButton: .cancel(Text("Cancelar")) {
+                            reserveToDelete = nil // Resetear la reserva seleccionada si se cancela
+                        }
+                    )
                 }
                 .searchable(text: $searchedText, prompt: "Número reserva, nombre o apellido") {}
                 .sheet(isPresented: $showCreatePaymentView) {
