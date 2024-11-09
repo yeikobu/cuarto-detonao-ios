@@ -13,5 +13,5 @@ enum RosesColor: String {
     case purple = "Morada"
     case blue = "Azul"
     case white = "Blanca"
-    case yellow = "Yellow"
+    case yellow = "Amarilla"
 }
