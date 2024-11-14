@@ -73,7 +73,7 @@ class ReservesViewModel {
     @MainActor
     func getQuantityOfPhotos() -> Int {
         let paidReserves = reserves.filter { $0.pago != nil }
-        let reservesWithPhotos = paidReserves.filter { $0.fotoURL != nil }
+        let reservesWithPhotos = paidReserves.filter { $0.fotoURL != nil && $0.fotoURL != "" }
         return reservesWithPhotos.count
     }
     
